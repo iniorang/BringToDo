@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BringToDo</string>
+    <string name="title_activity_listbarang">listbarang</string>
+    <string name="title_activity_listacara">listacara</string>
 </resources>
