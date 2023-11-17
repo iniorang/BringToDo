@@ -5,11 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -75,6 +77,10 @@ class MainActivity : ComponentActivity() {
                                     else item.unselectedIcon,
                                         contentDescription = item.title) })
                             }
+                        }
+                    }, floatingActionButton = {
+                        FloatingActionButton(onClick = { /*TODO*/ }) {
+                            Icon(Icons.Default.Add,contentDescription = "Add")
                         }
                     }) {
 
