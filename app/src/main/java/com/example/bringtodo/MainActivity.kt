@@ -56,114 +56,130 @@ data class IconForNav(
 
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             BringToDoTheme {
-                // A surface container using the 'background' color from the theme
-                val navController = rememberNavController()
-                val items = listOf(
-                    IconForNav(
-                        title = "Acara",
-                        selectedIcon = Icons.Default.DateRange,
-                        unselectedIcon = Icons.Outlined.DateRange,
-                        route = "ListAcara"
-                    ),
-                    IconForNav(
-                        title = "Barang",
-                        selectedIcon = Icons.Filled.Edit,
-                        unselectedIcon = Icons.Outlined.Edit,
-                        route = "ListBarang"
-                    ),
-                )
-                var selectedItem by rememberSaveable {
-                    mutableIntStateOf(0)
-                }
-
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Scaffold(topBar = {
-
-                    },bottomBar = {
-                        NavigationBar {
-                            items.forEachIndexed{
-                                index,item -> NavigationBarItem(
-                                selected = selectedItem == index,
-                                onClick = {
-                                    selectedItem = index
-//                                    navController.navigate(item.route)
-                                }, label = {
-                                        Text(text = item.title)
-                                },
-                                icon = {
-                                    Icon(
-                                        imageVector = if(index == selectedItem) {
-                                            item.selectedIcon}
-                                    else item.unselectedIcon,
-                                        contentDescription = item.title) })
-                            }
-                        }
-                    }, floatingActionButton = {
-                        FloatingActionButton(onClick = { /*TODO*/ }) {
-                            Icon(Icons.Default.Add,contentDescription = "Add")
-                        }
-                    }) {innerPadding ->
-                        Column(
-                            modifier = Modifier
-                                .padding(innerPadding)
-                                .verticalScroll(rememberScrollState()),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                        ) {
-                            repeat(30){
-                                Card(
-                                    colors = CardDefaults.cardColors(
-                                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                                    ),
-                                    modifier = Modifier
-                                        .height(150.dp)
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 15.dp)
-                                ) {
-                                    Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
-                                        Text(
-                                            text = "Event Name",
-                                            textAlign = TextAlign.Center,
-                                            fontSize = 30.sp
-                                        )
-                                        Text(
-                                            text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-                                            fontSize = 13.sp,
-                                            modifier = Modifier.padding(start = 0.dp, top = 5.dp)
-                                        )
-
-                                    }
-
-                                }
-                            }
-                        }
-
-                    }
-                }
+                Greeting()
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
+fun Greeting() {
+    // A surface container using the 'background' color from the theme
+    val navController = rememberNavController()
+    val items = listOf(
+        IconForNav(
+            title = "Acara",
+            selectedIcon = Icons.Default.DateRange,
+            unselectedIcon = Icons.Outlined.DateRange,
+            route = "ListAcara"
+        ),
+        IconForNav(
+            title = "Barang",
+            selectedIcon = Icons.Filled.Edit,
+            unselectedIcon = Icons.Outlined.Edit,
+            route = "ListBarang"
+        ),
     )
+    var selectedItem by rememberSaveable {
+        mutableIntStateOf(0)
+    }
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Scaffold(
+            topBar = {},
+            bottomBar = {
+            BottomBar(
+                items = items,
+                selectedItem = selectedItem,
+                onItemSelected = { index ->
+                    selectedItem = index
+                    // navController.navigate(items[index].route)
+                })
+        }, floatingActionButton = {
+            AddButton(onClick={/*Todonya*/})
+        }) {innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                repeat(2){
+                    NoteView()
+                }
+            }
+
+        }
+    }
 }
 
+@Composable
+fun NoteView(){
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        ),
+        modifier = Modifier
+            .height(150.dp)
+            .fillMaxWidth()
+            .padding(start = 15.dp, end = 15.dp, top=15.dp)
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
+            Text(
+                text = "Event Name",
+                textAlign = TextAlign.Center,
+                fontSize = 30.sp
+            )
+            Text(
+                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+                fontSize = 13.sp,
+                modifier = Modifier.padding(start = 0.dp, top = 5.dp)
+            )
+
+        }
+
+    }
+}
+@Composable
+fun AddButton(onClick: ()->Unit){
+    FloatingActionButton(onClick = { /*TODO*/ }) {
+        Icon(Icons.Default.Add,contentDescription = "Add")
+    }
+}
+
+@Composable
+fun BottomBar(
+    items: List<IconForNav>,
+    selectedItem: Int,
+    onItemSelected: (Int) -> Unit
+    ){
+    NavigationBar {
+        items.forEachIndexed{
+                index,item -> NavigationBarItem(
+            selected = selectedItem == index,
+            onClick = {onItemSelected(index) },
+            label = {Text(text = item.title)},
+            icon = {
+                Icon(
+                    imageVector = if(index == selectedItem) {
+                        item.selectedIcon}
+                    else item.unselectedIcon,
+                    contentDescription = item.title) })
+        }
+    }
+}
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     BringToDoTheme {
-        Greeting("Android")
+        Greeting()
     }
 }
