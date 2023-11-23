@@ -1,6 +1,8 @@
 package com.example.bringtodo
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.CalendarContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -32,11 +34,13 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -49,6 +53,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bringtodo.frontend.ListAcara
 import com.example.bringtodo.frontend.ListBarang
@@ -98,23 +103,32 @@ fun Greeting() {
     var selectedItem by rememberSaveable {
         mutableIntStateOf(0)
     }
+    var titleCur by remember{ mutableStateOf(items[selectedItem].title) }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         Scaffold(
-            topBar = {},
+            topBar = {
+                     TopAppBar(title = { Text(text = titleCur)})
+            },
             bottomBar = {
             BottomBar(
                 items = items,
                 selectedItem = selectedItem,
                 onItemSelected = { index ->
                     selectedItem = index
+                    titleCur = items[index].title
                 },
-                navController)
+                navController
+            )
         }, floatingActionButton = {
-            AddButton(onClick={/*Todonya*/})
+            when (selectedItem){
+                0 -> AddButton(onClick = {/*Todo*/})
+                1 -> AddButton(onClick = {/*Todo*/})
+                else->{}
+            }
         }) {innerPadding ->
             NavHost(navController = navController,
                 startDestination = Screen.Acara.route,
