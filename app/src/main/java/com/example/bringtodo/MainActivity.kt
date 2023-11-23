@@ -45,15 +45,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.bringtodo.frontend.ListAcara
+import com.example.bringtodo.frontend.ListBarang
 import com.example.bringtodo.ui.theme.BringToDoTheme
 data class IconForNav(
     val title : String,
     val selectedIcon : ImageVector,
     val unselectedIcon : ImageVector,
-    val route : String
+    val routes : String = ""
 )
 
+sealed class Screen(val route: String){
+    object Acara : Screen("ListAcara")
+    object Barang : Screen("ListBarang")
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,13 +86,13 @@ fun Greeting() {
             title = "Acara",
             selectedIcon = Icons.Default.DateRange,
             unselectedIcon = Icons.Outlined.DateRange,
-            route = "ListAcara"
+            routes = Screen.Acara.route
         ),
         IconForNav(
             title = "Barang",
             selectedIcon = Icons.Filled.Edit,
             unselectedIcon = Icons.Outlined.Edit,
-            route = "ListBarang"
+            routes = Screen.Barang.route
         ),
     )
     var selectedItem by rememberSaveable {
@@ -101,22 +111,21 @@ fun Greeting() {
                 selectedItem = selectedItem,
                 onItemSelected = { index ->
                     selectedItem = index
-                    // navController.navigate(items[index].route)
-                })
+                },
+                navController)
         }, floatingActionButton = {
             AddButton(onClick={/*Todonya*/})
         }) {innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                repeat(2){
-                    NoteView()
+            NavHost(navController = navController,
+                startDestination = Screen.Acara.route,
+                modifier = Modifier.padding(paddingValues = innerPadding)){
+                composable(Screen.Acara.route){
+                    ListAcara(navController)
+                }
+                composable(Screen.Barang.route){
+                    ListBarang(navController)
                 }
             }
-
         }
     }
 }
@@ -130,7 +139,7 @@ fun NoteView(){
         modifier = Modifier
             .height(150.dp)
             .fillMaxWidth()
-            .padding(start = 15.dp, end = 15.dp, top=15.dp)
+            .padding(start = 15.dp, end = 15.dp, top = 15.dp)
     ) {
         Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
             Text(
@@ -159,13 +168,21 @@ fun AddButton(onClick: ()->Unit){
 fun BottomBar(
     items: List<IconForNav>,
     selectedItem: Int,
-    onItemSelected: (Int) -> Unit
+    onItemSelected: (Int) -> Unit,
+    navController : NavController
     ){
     NavigationBar {
         items.forEachIndexed{
                 index,item -> NavigationBarItem(
             selected = selectedItem == index,
-            onClick = {onItemSelected(index) },
+            onClick = {onItemSelected(index)
+                      navController.navigate(item.routes){
+                          popUpTo(navController.graph.findStartDestination().id){
+                              saveState = true
+                          }
+                          launchSingleTop = true
+                          restoreState = true
+                      }},
             label = {Text(text = item.title)},
             icon = {
                 Icon(
