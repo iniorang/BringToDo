@@ -44,8 +44,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.bringtodo.frontend.Barang
-import com.example.bringtodo.frontend.FormBarang
+import com.example.bringtodo.frontend.FormTambahBarang
 import com.example.bringtodo.frontend.ListAcara
 import com.example.bringtodo.frontend.ListBarang
 import com.example.bringtodo.ui.theme.BringToDoTheme
@@ -116,25 +115,24 @@ fun Greeting() {
                 navController
             )
         }, floatingActionButton = {
-            when (selectedItem){
-                0 -> AddButton(onClick = {/*Todo*/})
-                1 -> AddButton(onClick = {
-                    navController.navigate("tambahBarang")
-                })
-                else->{}
-            }
+//            when (selectedItem){
+//                0 -> AddButton(onClick = {/*Todo*/},navController)
+//                1 -> AddButton(onClick = {
+//                    navController.navigate("tambahBarang")
+//                },navController)
+//                else->{}
+//            }
         }) {innerPadding ->
             NavHost(navController = navController,
-                startDestination = Screen.Acara.route,
-                modifier = Modifier.padding(paddingValues = innerPadding)){
+                startDestination = Screen.Acara.route, modifier = Modifier.padding(paddingValues = innerPadding)){
                 composable(Screen.Acara.route){
                     ListAcara(navController)
                 }
                 composable(Screen.Barang.route){
                     ListBarang(navController)
                 }
-                composable(route = "tambahBarang"){
-                    FormBarang(navController)
+                composable(route = "FormTambahBarang"){
+                    FormTambahBarang(navController)
                 }
             }
         }
@@ -169,7 +167,7 @@ fun NoteView(){
     }
 }
 @Composable
-fun AddButton(onClick: ()->Unit){
+fun AddButton(onClick: ()->Unit,navController: NavController){
     FloatingActionButton(onClick = { /*TODO*/ }) {
         Icon(Icons.Default.Add,contentDescription = "Add")
     }

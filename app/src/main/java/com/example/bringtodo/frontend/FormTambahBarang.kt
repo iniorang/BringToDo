@@ -34,7 +34,7 @@ class FormTambahBarang : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    FormBarang()
+                    FormTambahBarang()
                 }
             }
         }
@@ -43,12 +43,14 @@ class FormTambahBarang : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormBarang(navController: NavController) {
+fun FormTambahBarang(navController: NavController) {
     Scaffold(topBar = {
         TopAppBar(title = { Text(text = "Tambah Barang") })
     }) {innerPadding ->
         var text by remember{ mutableStateOf("") }
-        Column(modifier = Modifier.padding(innerPadding).fillMaxWidth()) {
+        Column(modifier = Modifier
+            .padding(innerPadding)
+            .fillMaxWidth()) {
             OutlinedTextField(value = text, onValueChange = {text = it}, label = { Text(text = ("Nama Barang"))})
         }
     }
@@ -58,6 +60,6 @@ fun FormBarang(navController: NavController) {
 @Composable
 fun GreetingPreview4() {
     BringToDoTheme {
-        Barang()
+        FormTambahBarang()
     }
 }
