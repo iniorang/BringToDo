@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.bringtodo.ui.theme.BringToDoTheme
 
 class ListBarang : ComponentActivity() {
@@ -51,7 +52,15 @@ class ListBarang : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListBarang(navController: NavController) {
-    Scaffold(floatingActionButton = { FloatingActionButton(onClick = { navController.navigate("FormTambahBarang")}) {
+    Scaffold(floatingActionButton = { FloatingActionButton(onClick = {
+        navController.navigate("FormTambahBarang"){
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }) {
         Icon(Icons.Default.Add, contentDescription = "Add")
     }
     }) { innerPadding->
@@ -64,6 +73,7 @@ fun ListBarang(navController: NavController) {
             Text(text = "Kosong")
         }
     }
+
 }
 
 @Preview(showBackground = true)

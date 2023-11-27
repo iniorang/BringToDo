@@ -3,6 +3,7 @@ package com.example.bringtodo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -114,11 +115,17 @@ fun Greeting() {
                 },
                 navController
             )
-        }, floatingActionButton = {
+//        }, floatingActionButton = {
 //            when (selectedItem){
 //                0 -> AddButton(onClick = {/*Todo*/},navController)
 //                1 -> AddButton(onClick = {
-//                    navController.navigate("tambahBarang")
+//                    navController.navigate("FormTambahBarang"){
+//                        popUpTo(navController.graph.findStartDestination().id) {
+//                            saveState = true
+//                        }
+//                        launchSingleTop = true
+//                        restoreState = true
+//                    }
 //                },navController)
 //                else->{}
 //            }
@@ -140,38 +147,12 @@ fun Greeting() {
 }
 
 @Composable
-fun NoteView(){
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        ),
-        modifier = Modifier
-            .height(150.dp)
-            .fillMaxWidth()
-            .padding(start = 15.dp, end = 15.dp, top = 15.dp)
-    ) {
-        Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
-            Text(
-                text = "Event Name",
-                textAlign = TextAlign.Center,
-                fontSize = 30.sp
-            )
-            Text(
-                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-                fontSize = 13.sp,
-                modifier = Modifier.padding(start = 0.dp, top = 5.dp)
-            )
-
-        }
-
-    }
-}
-@Composable
 fun AddButton(onClick: ()->Unit,navController: NavController){
     FloatingActionButton(onClick = { /*TODO*/ }) {
         Icon(Icons.Default.Add,contentDescription = "Add")
     }
 }
+
 
 @Composable
 fun BottomBar(
