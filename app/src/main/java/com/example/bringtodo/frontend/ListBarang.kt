@@ -53,14 +53,16 @@ class ListBarang : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListBarang(navController: NavController) {
-    Scaffold(floatingActionButton = { FloatingActionButton(onClick = {
-        navController.navigate(Screen.TambahBarang.route){
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { navController.navigate(Screen.TambahBarang.route){
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
             }
-            launchSingleTop = true
-            restoreState = true
-        }
+                    launchSingleTop = true
+                    restoreState = true
+                }
     }) {
         Icon(Icons.Default.Add, contentDescription = "Add")
     }

@@ -45,6 +45,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.bringtodo.frontend.AddEvent
 import com.example.bringtodo.frontend.FormTambahBarang
 import com.example.bringtodo.frontend.ListAcara
 import com.example.bringtodo.frontend.ListBarang
@@ -61,6 +62,7 @@ sealed class Screen(val route: String){
     object Barang : Screen("ListBarang")
     object TambahBarang : Screen("TambahBarang")
     object DetailAcara : Screen("DetailAcara")
+    object AddEvent :Screen("AddEvent")
 }
 
 class MainActivity : ComponentActivity() {
@@ -116,21 +118,7 @@ fun Greeting() {
                 },
                 navController
             )
-//        }, floatingActionButton = {
-//            when (selectedItem){
-//                0 -> AddButton(onClick = {/*Todo*/},navController)
-//                1 -> AddButton(onClick = {
-//                    navController.navigate("FormTambahBarang"){
-//                        popUpTo(navController.graph.findStartDestination().id) {
-//                            saveState = true
-//                        }
-//                        launchSingleTop = true
-//                        restoreState = true
-//                    }
-//                },navController)
-//                else->{}
-//            }
-        }) {innerPadding ->
+        },) {innerPadding ->
             NavHost(navController = navController,
                 startDestination = Screen.Acara.route, modifier = Modifier.padding(paddingValues = innerPadding)){
                 composable(Screen.Acara.route){
@@ -142,6 +130,9 @@ fun Greeting() {
                 composable(Screen.TambahBarang.route){
                     FormTambahBarang(navController)
                 }
+                composable(Screen.AddEvent.route){
+                    AddEvent(navController)
+                }
                 composable(Screen.DetailAcara.route){
                     DetailAcara(navController)
                 }
@@ -152,7 +143,7 @@ fun Greeting() {
 
 @Composable
 fun AddButton(onClick: ()->Unit,navController: NavController){
-    FloatingActionButton(onClick = { /*TODO*/ }) {
+    FloatingActionButton(onClick = onClick) {
         Icon(Icons.Default.Add,contentDescription = "Add")
     }
 }
