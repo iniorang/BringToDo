@@ -60,6 +60,7 @@ sealed class Screen(val route: String){
     object Acara : Screen("ListAcara")
     object Barang : Screen("ListBarang")
     object TambahBarang : Screen("TambahBarang")
+    object DetailAcara : Screen("DetailAcara")
 }
 
 class MainActivity : ComponentActivity() {
@@ -138,8 +139,11 @@ fun Greeting() {
                 composable(Screen.Barang.route){
                     ListBarang(navController)
                 }
-                composable(route = "FormTambahBarang"){
+                composable(Screen.TambahBarang.route){
                     FormTambahBarang(navController)
+                }
+                composable(Screen.DetailAcara.route){
+                    DetailAcara(navController)
                 }
             }
         }

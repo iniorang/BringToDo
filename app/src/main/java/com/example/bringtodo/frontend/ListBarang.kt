@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.example.bringtodo.Screen
 import com.example.bringtodo.ui.theme.BringToDoTheme
 
 class ListBarang : ComponentActivity() {
@@ -53,7 +54,7 @@ class ListBarang : ComponentActivity() {
 @Composable
 fun ListBarang(navController: NavController) {
     Scaffold(floatingActionButton = { FloatingActionButton(onClick = {
-        navController.navigate("FormTambahBarang"){
+        navController.navigate(Screen.TambahBarang.route){
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }

@@ -3,6 +3,8 @@ package com.example.bringtodo.frontend
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.example.bringtodo.Screen
 import com.example.bringtodo.ui.theme.BringToDoTheme
 
 class ListAcara : ComponentActivity() {
@@ -48,7 +52,7 @@ class ListAcara : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ListAcara(navController: NavController) {
     Scaffold(floatingActionButton = { FloatingActionButton(onClick = { /*TODO*/ }) {
@@ -69,6 +73,13 @@ fun ListAcara(navController: NavController) {
                         .height(150.dp)
                         .fillMaxWidth()
                         .padding(horizontal = 15.dp)
+                        .combinedClickable(enabled = true, onClick = {        navController.navigate(Screen.DetailAcara.route){
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }})
                 ) {
                     Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
                         Text(
@@ -90,7 +101,7 @@ fun ListAcara(navController: NavController) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = false)
 @Composable
 fun GreetingPreview3() {
     BringToDoTheme {

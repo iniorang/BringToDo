@@ -16,6 +16,11 @@
         android:theme="@style/Theme.BringToDo"
         tools:targetApi="31">
         <activity
+            android:name=".DetailAcara"
+            android:exported="false"
+            android:label="@string/title_activity_detail_acara"
+            android:theme="@style/Theme.BringToDo" />
+        <activity
             android:name=".frontend.FormTambahBarang"
             android:exported="false"
             android:label="@string/title_activity_form_tambah_barang"
