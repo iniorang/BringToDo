@@ -65,39 +65,46 @@ fun ListAcara(navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             repeat(2){
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    ),
-                    modifier = Modifier
-                        .height(150.dp)
-                        .fillMaxWidth()
-                        .padding(horizontal = 15.dp)
-                        .combinedClickable(enabled = true, onClick = {        navController.navigate(Screen.DetailAcara.route){
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }})
-                ) {
-                    Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
-                        Text(
-                            text = "Event Name",
-                            textAlign = TextAlign.Center,
-                            fontSize = 30.sp
-                        )
-                        Text(
-                            text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-                            fontSize = 13.sp,
-                            modifier = Modifier.padding(start = 0.dp, top = 5.dp)
-                        )
-
-                    }
-
-                }
+                CardEvent(navController)
             }
         }
+    }
+}
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun CardEvent(navController: NavController){
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        ),
+        modifier = Modifier
+            .height(150.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 15.dp)
+            .combinedClickable(enabled = true, onClick = {
+                navController.navigate(Screen.DetailAcara.route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            })
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
+            Text(
+                text = "Event Name",
+                textAlign = TextAlign.Center,
+                fontSize = 30.sp
+            )
+            Text(
+                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+                fontSize = 13.sp,
+                modifier = Modifier.padding(start = 0.dp, top = 5.dp)
+            )
+
+        }
+
     }
 }
 
