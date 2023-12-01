@@ -71,9 +71,7 @@ fun ListAcara(navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             repeat(2){
-<<<<<<< Updated upstream
                 CardEvent(navController)
-=======
                 Card(
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -106,7 +104,6 @@ fun ListAcara(navController: NavController) {
                     }
 
                 }
->>>>>>> Stashed changes
             }
         }
     }
