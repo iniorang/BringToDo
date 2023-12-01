@@ -3,4 +3,5 @@
     <string name="title_activity_listbarang">listbarang</string>
     <string name="title_activity_listacara">listacara</string>
     <string name="title_activity_form_tambah_barang">FormTambahBarang</string>
+    <string name="title_activity_detail_acara">DetailAcara</string>
 </resources>

@@ -3,6 +3,7 @@ package com.example.bringtodo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,8 +45,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.bringtodo.frontend.Barang
-import com.example.bringtodo.frontend.FormBarang
+import com.example.bringtodo.frontend.AddEvent
+import com.example.bringtodo.frontend.FormTambahBarang
 import com.example.bringtodo.frontend.ListAcara
 import com.example.bringtodo.frontend.ListBarang
 import com.example.bringtodo.ui.theme.BringToDoTheme
@@ -60,6 +61,8 @@ sealed class Screen(val route: String){
     object Acara : Screen("ListAcara")
     object Barang : Screen("ListBarang")
     object TambahBarang : Screen("TambahBarang")
+    object DetailAcara : Screen("DetailAcara")
+    object AddEvent :Screen("AddEvent")
 }
 
 class MainActivity : ComponentActivity() {
@@ -115,26 +118,23 @@ fun Greeting() {
                 },
                 navController
             )
-        }, floatingActionButton = {
-            when (selectedItem){
-                0 -> AddButton(onClick = {/*Todo*/})
-                1 -> AddButton(onClick = {
-                    navController.navigate("tambahBarang")
-                })
-                else->{}
-            }
-        }) {innerPadding ->
+        },) {innerPadding ->
             NavHost(navController = navController,
-                startDestination = Screen.Acara.route,
-                modifier = Modifier.padding(paddingValues = innerPadding)){
+                startDestination = Screen.Acara.route, modifier = Modifier.padding(paddingValues = innerPadding)){
                 composable(Screen.Acara.route){
                     ListAcara(navController)
                 }
                 composable(Screen.Barang.route){
                     ListBarang(navController)
                 }
-                composable(route = "tambahBarang"){
-                    FormBarang(navController)
+                composable(Screen.TambahBarang.route){
+                    FormTambahBarang(navController)
+                }
+                composable(Screen.AddEvent.route){
+                    AddEvent(navController)
+                }
+                composable(Screen.DetailAcara.route){
+                    DetailAcara(navController)
                 }
             }
         }
@@ -142,38 +142,12 @@ fun Greeting() {
 }
 
 @Composable
-fun NoteView(){
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        ),
-        modifier = Modifier
-            .height(150.dp)
-            .fillMaxWidth()
-            .padding(start = 15.dp, end = 15.dp, top = 15.dp)
-    ) {
-        Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)) {
-            Text(
-                text = "Event Name",
-                textAlign = TextAlign.Center,
-                fontSize = 30.sp
-            )
-            Text(
-                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-                fontSize = 13.sp,
-                modifier = Modifier.padding(start = 0.dp, top = 5.dp)
-            )
-
-        }
-
-    }
-}
-@Composable
-fun AddButton(onClick: ()->Unit){
-    FloatingActionButton(onClick = { /*TODO*/ }) {
+fun AddButton(onClick: ()->Unit,navController: NavController){
+    FloatingActionButton(onClick = onClick) {
         Icon(Icons.Default.Add,contentDescription = "Add")
     }
 }
+
 
 @Composable
 fun BottomBar(
