@@ -69,7 +69,8 @@ fun AddEvent (navController: NavController){
         }
     ){ innerPadding ->
         Column (
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
