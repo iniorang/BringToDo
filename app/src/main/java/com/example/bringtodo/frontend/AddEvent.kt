@@ -3,6 +3,8 @@ package com.example.bringtodo.frontend
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
@@ -34,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.example.bringtodo.ui.theme.BringToDoTheme
 import java.text.SimpleDateFormat
@@ -59,38 +64,87 @@ class AddEvent : ComponentActivity() {
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEvent (navController: NavController){
-    var text by remember { mutableStateOf(TextFieldValue("")) }
-    var isDatePickerVisible by remember { mutableStateOf(false) }
+fun AddEvent(navController: NavController) {
     var selectedDate by remember { mutableStateOf("") }
-    Scaffold (
+    var addNameEvent by remember {mutableStateOf("")}
+    var isDatePickerVisible by remember { mutableStateOf(false) }
+
+    Scaffold(
         topBar = {
-            TopAppBar(title = { Text(text = "Edit User") })
+            TopAppBar(title = { Text(text = "Add Event") })
         }
-    ){ innerPadding ->
-        Column (
-            modifier = Modifier.fillMaxWidth()
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            Row(verticalAlignment = Alignment.CenterVertically){
-                Button(onClick = { isDatePickerVisible = true }) {
-                    Text("Filled")
-                }
-                if (isDatePickerVisible) {
-                    DatePickerCompose { date ->
-                        selectedDate = date
-                        isDatePickerVisible = false // Hide the date picker after selection if needed
+
+        ) {
+            Column (
+                modifier = Modifier
+                .padding(30.dp,10.dp,30.dp,0.dp),
+                ){
+                Text(text = "Select Date")
+                Row(verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.End){
+                    TextField(
+                        value = selectedDate,
+                        onValueChange = { newValue ->
+                            selectedDate = newValue
+                        },
+
+                    )
+                    Button(
+                        onClick = {isDatePickerVisible = true},
+                    ) {
+                        Text("Date")
                     }
                 }
-                TextField(
-                    value = selectedDate,
-                    onValueChange = { newValue ->
-                        selectedDate = newValue
-                    }
+
+            }
+            
+            Column(
+                modifier = Modifier.padding(30.dp,10.dp,30.dp,0.dp)
+            ){
+                Text(
+                    text = "Add Name Event"
                 )
+                TextField(
+                    value = addNameEvent,
+                    onValueChange = {newValue ->
+                        addNameEvent = newValue
+
+                    })
+            }
+            Button(
+                modifier = Modifier.padding(0.dp,30.dp)
+                    .align(Alignment.CenterHorizontally),
+                onClick = {},
+                ) {
+                Text("Save")
             }
 
+            if (isDatePickerVisible) {
+                AlertDialog(
+                    onDismissRequest = { isDatePickerVisible = false },
+                    title = { Text("Select Date") },
+                    text = {
+                        DatePickerCompose { date ->
+                            selectedDate = date
+                            isDatePickerVisible = false // Hide the date picker after selection if needed
+                        }
+                    },
+                    confirmButton = {
+                        Button(onClick = { isDatePickerVisible = false }) {
+                            Text("Close")
+                        }
+                    },
+                    dismissButton = null,
+                    properties = DialogProperties(
+                        dismissOnBackPress = false,
+                        dismissOnClickOutside = false
+                    )
+                )
+            }
         }
     }
 }
@@ -123,7 +177,6 @@ fun DatePickerCompose(onDateSelected: (String) -> Unit) {
         )
     }
 }
-
 private fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     return formatter.format(Date(millis))
