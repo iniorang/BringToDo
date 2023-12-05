@@ -75,6 +75,8 @@ fun AddEvent(navController: NavController) {
         }
     ) { innerPadding ->
         Column(
+    ){ innerPadding ->
+        Column (
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(innerPadding),
