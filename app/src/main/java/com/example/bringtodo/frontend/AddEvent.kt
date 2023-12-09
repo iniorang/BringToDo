@@ -73,9 +73,7 @@ fun AddEvent(navController: NavController) {
         topBar = {
             TopAppBar(title = { Text(text = "Add Event") })
         }
-    ) { innerPadding ->
-        Column(
-    ){ innerPadding ->
+    ) {  innerPadding ->
         Column (
             modifier = Modifier
                 .fillMaxWidth()

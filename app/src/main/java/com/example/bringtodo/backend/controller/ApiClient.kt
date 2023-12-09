@@ -4,10 +4,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiClient {
-    private val baseUrl = "http://10.0.2.2:1337/api/"
+//    private val baseUrl = "http://10.0.2.2:1337/api/"
     companion object{
         private val client: Retrofit = Retrofit.Builder()
-            .baseUrl("baseUrl")
+            .baseUrl("http://10.0.2.2:1337/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
