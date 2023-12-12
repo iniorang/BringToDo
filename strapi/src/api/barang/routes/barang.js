@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * acara router
+ * barang router
  */
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::acara.acara');
+module.exports = createCoreRouter('api::barang.barang');

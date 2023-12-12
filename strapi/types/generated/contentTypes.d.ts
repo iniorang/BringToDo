@@ -362,31 +362,29 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
-export interface ApiAcaraAcara extends Schema.CollectionType {
-  collectionName: 'acaras';
+export interface ApiBarangBarang extends Schema.CollectionType {
+  collectionName: 'barangs';
   info: {
-    singularName: 'acara';
-    pluralName: 'acaras';
-    displayName: 'Acara';
+    singularName: 'barang';
+    pluralName: 'barangs';
+    displayName: 'Barang';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    name: Attribute.String;
-    desc: Attribute.Text;
-    date: Attribute.Date;
+    namaBarang: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'api::acara.acara',
+      'api::barang.barang',
       'oneToOne',
       'admin::user'
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'api::acara.acara',
+      'api::barang.barang',
       'oneToOne',
       'admin::user'
     > &
@@ -719,7 +717,7 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
-      'api::acara.acara': ApiAcaraAcara;
+      'api::barang.barang': ApiBarangBarang;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;

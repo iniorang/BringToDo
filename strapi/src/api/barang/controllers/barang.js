@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * acara controller
+ * barang controller
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
 
-module.exports = createCoreController('api::acara.acara');
+module.exports = createCoreController('api::barang.barang');
