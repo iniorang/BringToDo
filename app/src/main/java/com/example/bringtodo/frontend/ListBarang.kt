@@ -1,24 +1,14 @@
 package com.example.bringtodo.frontend
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -27,24 +17,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.bringtodo.Screen
-import com.example.bringtodo.backend.controller.BarangController
-import com.example.bringtodo.backend.model.Barang
+import com.example.bringtodo.backend.Service.BarangService
+import com.example.bringtodo.backend.model.BarangModel
 import com.example.bringtodo.ui.theme.BringToDoTheme
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class ListBarang : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,26 +53,41 @@ class ListBarang : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListBarang(navController: NavController) {
-    var barang by remember { mutableStateOf<List<Barang>?>(null) }
-    val lazyListState = rememberLazyListState()
-
-    LaunchedEffect(Unit) {
-        BarangController.getBarang { response ->
-            if (response != null) {
-                val listBarang: List<Barang>? = response.data
-                if (listBarang != null) {
-                    barang = listBarang
+    var listBarang = remember{ mutableStateListOf<BarangModel>()}
+    var baseUrl = "http://10.0.2.2:1337/api/"
+    val retrofit = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(BarangService::class.java)
+    val call = retrofit.getBarang()
+    call.enqueue(object : Callback<List<BarangModel>> {
+        override fun onResponse(
+            call: Call<List<BarangModel>>,
+            response: Response<List<BarangModel>>
+        ) {
+            Log.d("ListBarang", "Response code: ${response.code()}")
+            if (response.code() == 200) {
+                Log.d("ListBarang", "Response code: ${response.code()}")
+                listBarang.clear()
+                response.body()?.forEach{ barangRes ->
+                    listBarang.add(barangRes)
                 }
+            } else if (response.code() == 400) {
             }
         }
-    }
+        override fun onFailure(call: Call<List<BarangModel>>, t: Throwable) {
+            print(t.message)
+        }
+
+    })
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
                     navController.navigate(Screen.TambahBarang.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+                            saveState = false
                         }
                         launchSingleTop = true
                         restoreState = true
@@ -102,16 +104,9 @@ fun ListBarang(navController: NavController) {
                 .fillMaxSize()
 //                .verticalScroll(lazyListState)
         ) {
-            items(barang ?: emptyList()) { barang ->
-                Row(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = barang.namaBarang)
-
+            listBarang.forEach{
+                    barangRes -> item {
+                Text(text = barangRes.namaBarang)
                 }
             }
         }

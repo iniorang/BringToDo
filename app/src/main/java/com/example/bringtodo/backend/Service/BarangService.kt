@@ -1,12 +1,16 @@
 package com.example.bringtodo.backend.Service
 
-import com.example.bringtodo.backend.model.Barang
-import com.example.bringtodo.backend.model.BarangResponse
+import com.example.bringtodo.backend.model.BarangModel
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 
-data class BarangData(val namaBarang:String)
+class BarangData(val namaBarang:String?)
 interface BarangService {
-    @GET("barangs")
-    fun getBarang():Call<BarangResponse<List<Barang>>>
+    @GET("api/barangs")
+    fun getBarang():Call<List<BarangModel>>
+
+    @POST("api/barangs")
+    fun saveBarang(@Body body: BarangData): Call<BarangModel>
 }
