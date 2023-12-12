@@ -1,5 +1,7 @@
 package com.example.bringtodo
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -36,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -81,6 +84,8 @@ class MainActivity : ComponentActivity() {
 fun Greeting() {
     // A surface container using the 'background' color from the theme
     val navController = rememberNavController()
+    val preferencesManager = PreferencesManager(context = LocalContext.current)
+    val sharedPreferences: SharedPreferences = LocalContext.current.getSharedPreferences("auth", Context.MODE_PRIVATE)
     val items = listOf(
         IconForNav(
             title = "Acara",
@@ -106,19 +111,19 @@ fun Greeting() {
     ) {
         Scaffold(
             topBar = {
-                     TopAppBar(title = { Text(text = titleCur)})
+                TopAppBar(title = { Text(text = titleCur)})
             },
             bottomBar = {
-            BottomBar(
-                items = items,
-                selectedItem = selectedItem,
-                onItemSelected = { index ->
-                    selectedItem = index
-                    titleCur = items[index].title
-                },
-                navController
-            )
-        },) {innerPadding ->
+                BottomBar(
+                    items = items,
+                    selectedItem = selectedItem,
+                    onItemSelected = { index ->
+                        selectedItem = index
+                        titleCur = items[index].title
+                    },
+                    navController
+                )
+            },) {innerPadding ->
             NavHost(navController = navController,
                 startDestination = Screen.Acara.route, modifier = Modifier.padding(paddingValues = innerPadding)){
                 composable(Screen.Acara.route){
@@ -155,19 +160,19 @@ fun BottomBar(
     selectedItem: Int,
     onItemSelected: (Int) -> Unit,
     navController : NavController
-    ){
+){
     NavigationBar {
         items.forEachIndexed{
                 index,item -> NavigationBarItem(
             selected = selectedItem == index,
             onClick = {onItemSelected(index)
-                      navController.navigate(item.routes){
-                          popUpTo(navController.graph.findStartDestination().id){
-                              saveState = true
-                          }
-                          launchSingleTop = true
-                          restoreState = true
-                      }},
+                navController.navigate(item.routes){
+                    popUpTo(navController.graph.findStartDestination().id){
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }},
             label = {Text(text = item.title)},
             icon = {
                 Icon(

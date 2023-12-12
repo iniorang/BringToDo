@@ -12,13 +12,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SelectableDates
@@ -40,6 +45,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.example.bringtodo.Screen
+import com.example.bringtodo.backend.controller.AcaraController
 import com.example.bringtodo.ui.theme.BringToDoTheme
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -70,20 +77,17 @@ fun AddEvent(navController: NavController) {
     var isDatePickerVisible by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = {
-            TopAppBar(title = { Text(text = "Add Event") })
-        }
     ) {  innerPadding ->
         Column (
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(innerPadding),
 
-        ) {
+            ) {
             Column (
                 modifier = Modifier
-                .padding(30.dp,10.dp,30.dp,0.dp),
-                ){
+                    .padding(30.dp,10.dp,30.dp,0.dp),
+            ){
                 Text(text = "Select Date")
                 Row(verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.End){
                     TextField(
@@ -92,16 +96,16 @@ fun AddEvent(navController: NavController) {
                             selectedDate = newValue
                         },
 
-                    )
-                    Button(
+                        )
+                    IconButton(
                         onClick = {isDatePickerVisible = true},
                     ) {
-                        Text("Date")
+                        Icon(imageVector = Icons.Default.DateRange, contentDescription = "Pilih Tanggal", modifier = Modifier.size(30.dp))
                     }
                 }
 
             }
-            
+
             Column(
                 modifier = Modifier.padding(30.dp,10.dp,30.dp,0.dp)
             ){
@@ -118,8 +122,14 @@ fun AddEvent(navController: NavController) {
             Button(
                 modifier = Modifier.padding(0.dp,30.dp)
                     .align(Alignment.CenterHorizontally),
-                onClick = {},
-                ) {
+                onClick = {
+                    AcaraController.insertAcara(addNameEvent,selectedDate){
+                            acara ->  if (acara != null) {
+                        navController.navigate(Screen.Acara.route)
+                    }
+                    }
+                },
+            ) {
                 Text("Save")
             }
 
@@ -178,6 +188,6 @@ fun DatePickerCompose(onDateSelected: (String) -> Unit) {
     }
 }
 private fun convertMillisToDate(millis: Long): String {
-    val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     return formatter.format(Date(millis))
 }
