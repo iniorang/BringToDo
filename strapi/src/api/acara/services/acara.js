@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * barang service
+ * acara service
  */
 
 const { createCoreService } = require('@strapi/strapi').factories;
 
-module.exports = createCoreService('api::barang.barang');
+module.exports = createCoreService('api::acara.acara');

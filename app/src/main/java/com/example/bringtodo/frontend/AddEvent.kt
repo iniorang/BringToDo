@@ -40,6 +40,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.example.bringtodo.Screen
+import com.example.bringtodo.backend.controller.AcaraController
 import com.example.bringtodo.ui.theme.BringToDoTheme
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -118,7 +120,13 @@ fun AddEvent(navController: NavController) {
             Button(
                 modifier = Modifier.padding(0.dp,30.dp)
                     .align(Alignment.CenterHorizontally),
-                onClick = {},
+                onClick = {
+                    AcaraController.insertAcara(addNameEvent,selectedDate){
+                        acara ->  if (acara != null) {
+                            navController.navigate(Screen.Acara.route)
+                        }
+                    }
+                },
                 ) {
                 Text("Save")
             }
@@ -178,6 +186,6 @@ fun DatePickerCompose(onDateSelected: (String) -> Unit) {
     }
 }
 private fun convertMillisToDate(millis: Long): String {
-    val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     return formatter.format(Date(millis))
 }

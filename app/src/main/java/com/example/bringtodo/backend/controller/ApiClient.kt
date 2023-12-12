@@ -6,13 +6,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ApiClient {
 //    private val baseUrl = "http://10.0.2.2:1337/api/"
     companion object{
-        private val client: Retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:1337/api/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    private val client : Retrofit = Retrofit.Builder()
+        .baseUrl("http://10.0.2.2:1337/api/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 
-        fun <T> getService(serviceClass:Class<T>):T{
-            return client.create(serviceClass)
-        }
+    fun <T> getService(serviceClass: Class<T>): T {
+        return client.create(serviceClass)
+    }
     }
 }
