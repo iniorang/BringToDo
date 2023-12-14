@@ -4,15 +4,14 @@
   "info": {
     "singularName": "barang",
     "pluralName": "barangs",
-    "displayName": "Barang",
-    "description": ""
+    "displayName": "Barang"
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
+    "namaBarang": {
       "type": "string"
     }
   }
