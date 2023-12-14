@@ -17,4 +17,6 @@ class AcaraAttributes{
     var desc : String = ""
     @SerializedName("date")
     var date : String = ""
+    @SerializedName("time")
+    var time : String = ""
 }

@@ -1,8 +1,10 @@
 package com.example.bringtodo.frontend
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -31,8 +34,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +54,13 @@ import androidx.navigation.NavController
 import com.example.bringtodo.Screen
 import com.example.bringtodo.backend.controller.AcaraController
 import com.example.bringtodo.ui.theme.BringToDoTheme
+import com.google.android.material.timepicker.TimeFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -69,12 +81,15 @@ class AddEvent : ComponentActivity() {
         }
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun AddEvent(navController: NavController) {
     var selectedDate by remember { mutableStateOf("") }
+    var timeEvent by remember { mutableStateOf("") }
     var addNameEvent by remember {mutableStateOf("")}
+    var eventDesc by remember { mutableStateOf("") }
     var isDatePickerVisible by remember { mutableStateOf(false) }
+    var isTimePickerVisible by remember { mutableStateOf(false) }
 
     Scaffold(
     ) {  innerPadding ->
@@ -105,7 +120,20 @@ fun AddEvent(navController: NavController) {
                 }
 
             }
-
+            Column(modifier = Modifier.padding(30.dp, 10.dp, 30.dp, 0.dp)) {
+                Text(text = "Select Time")
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
+                    TextField(
+                        value = timeEvent,
+                        onValueChange = { newValue ->
+                            timeEvent = newValue
+                        },
+                    )
+                    IconButton(onClick = { isTimePickerVisible = true }) {
+                        Icon(imageVector = Icons.Default.AddCircle, contentDescription = "Pilih Waktu", modifier = Modifier.size(30.dp))
+                    }
+                }
+            }
             Column(
                 modifier = Modifier.padding(30.dp,10.dp,30.dp,0.dp)
             ){
@@ -120,10 +148,11 @@ fun AddEvent(navController: NavController) {
                     })
             }
             Button(
-                modifier = Modifier.padding(0.dp,30.dp)
+                modifier = Modifier
+                    .padding(0.dp, 30.dp)
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    AcaraController.insertAcara(addNameEvent,selectedDate){
+                    AcaraController.insertAcara(addNameEvent,eventDesc,selectedDate,timeEvent){
                             acara ->  if (acara != null) {
                         navController.navigate(Screen.Acara.route)
                     }
@@ -138,13 +167,34 @@ fun AddEvent(navController: NavController) {
                     onDismissRequest = { isDatePickerVisible = false },
                     title = { Text("Select Date") },
                     text = {
-                        DatePickerCompose { date ->
+                        DatePickerCompose{ date ->
                             selectedDate = date
-                            isDatePickerVisible = false // Hide the date picker after selection if needed
                         }
                     },
                     confirmButton = {
                         Button(onClick = { isDatePickerVisible = false }) {
+                            Text("Close")
+                        }
+                    },
+                    dismissButton = null,
+                    properties = DialogProperties(
+                        dismissOnBackPress = false,
+                        dismissOnClickOutside = false
+                    )
+                )
+            }
+
+            if (isTimePickerVisible) {
+                AlertDialog(
+                    onDismissRequest = { isTimePickerVisible = false },
+                    title = { Text("Select Time") },
+                    text = {
+                        TimePickerCompose { time ->
+                            timeEvent = time
+                        }
+                    },
+                    confirmButton = {
+                        Button(onClick = { isTimePickerVisible = false }) {
                             Text("Close")
                         }
                     },
@@ -178,15 +228,47 @@ fun DatePickerCompose(onDateSelected: (String) -> Unit) {
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        DatePicker(state = datePickerState)
+        DatePicker(
+            state = datePickerState,
+        )
         Spacer(modifier = Modifier.height(32.dp))
-        // Display selected date
         Text(
             text = "Selected Date: ${selectedDate?.let { convertMillisToDate(it) } ?: "Not selected"}",
             color = Color.Red
         )
     }
 }
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TimePickerCompose(onTimeSelected: (String) -> Unit) {
+    val timePickerState = rememberTimePickerState()
+    val selectedTimeMillis: Long = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, timePickerState.hour)
+        set(Calendar.MINUTE, timePickerState.minute)
+    }.timeInMillis
+
+    selectedTimeMillis?.let { time ->
+        val formattedTime = convertMillisToTime(time)
+        onTimeSelected(formattedTime)
+    }
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        TimePicker(state = timePickerState)
+        Spacer(modifier = Modifier.height(32.dp))
+        Text(
+            text = "Selected Time: ${selectedTimeMillis?.let { convertMillisToTime(it) }}",
+            color = Color.Red
+        )
+    }
+}
+
+private fun convertMillisToTime(timeMillis: Long): String {
+    val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return formatter.format(Date(timeMillis))
+}
+
 private fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     return formatter.format(Date(millis))

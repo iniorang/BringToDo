@@ -97,7 +97,7 @@ fun CardEvent(acara: Acara, navController: NavController){
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
         ),
         modifier = Modifier
-            .height(150.dp)
+            .height(180.dp)
             .fillMaxWidth()
             .padding(horizontal = 15.dp)
             .combinedClickable(enabled = true, onClick = {
@@ -123,6 +123,11 @@ fun CardEvent(acara: Acara, navController: NavController){
             )
             Text(
                 text = acara.attributes.date,
+                fontSize = 13.sp,
+                modifier = Modifier.padding(start = 0.dp, top = 5.dp)
+            )
+            Text(
+                text = acara.attributes.time,
                 fontSize = 13.sp,
                 modifier = Modifier.padding(start = 0.dp, top = 5.dp)
             )

@@ -1,7 +1,6 @@
 package com.example.bringtodo.backend.Service
 
 import com.example.bringtodo.backend.model.Acara
-import com.example.bringtodo.backend.model.Barang
 import com.example.bringtodo.backend.model.ApiResponse
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
@@ -22,6 +21,8 @@ data class AcaraBody(
     val desc: String,
     @SerializedName("date")
     val date: String,
+    @SerializedName("time")
+    val time: String
 )
 interface AcaraService {
     @POST("acaras")
