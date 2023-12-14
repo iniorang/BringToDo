@@ -1,30 +1,16 @@
 package com.example.bringtodo.backend.Service
 
-import com.example.bringtodo.backend.model.ApiResponse
-import com.example.bringtodo.backend.model.Barang
-import com.google.gson.annotations.SerializedName
+import com.example.bringtodo.backend.model.BarangModel
 import retrofit2.Call
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Path
 
-class BarangData(
-    @SerializedName("data")
-    val data:BarangBody
-)
-data class BarangBody(
-    val name: String
-)
-
+class BarangData(val namaBarang:String?)
 interface BarangService {
-    @GET("barangs")
-    fun getAll():Call<ApiResponse<List<Barang>>>
+    @GET("api/barangs")
+    fun getBarang():Call<List<BarangModel>>
 
-    @POST("barangs")
-    fun insert(@Body body: BarangData): Call<Barang>
-
-    @DELETE("barangs/{id}")
-    fun delete(@Path("id")id:Int):Call<ApiResponse<Barang>>
+    @POST("api/barangs")
+    fun saveBarang(@Body body: BarangData): Call<BarangModel>
 }
