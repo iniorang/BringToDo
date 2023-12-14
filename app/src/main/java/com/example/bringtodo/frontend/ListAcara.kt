@@ -7,6 +7,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -131,11 +132,18 @@ fun CardEvent(acara: Acara, navController: NavController){
                 fontSize = 13.sp,
                 modifier = Modifier.padding(start = 0.dp, top = 5.dp)
             )
-            Button(onClick = {
-                AcaraController.deleteAcara(acara.id)
-                navController.navigate(Screen.Acara.route)
-            }) {
-                Text(text = "delete")
+            Row {
+                Button(onClick = {
+                    AcaraController.deleteAcara(acara.id)
+                    navController.navigate(Screen.Acara.route)
+                }) {
+                    Text(text = "Delete")
+                }
+                Button(onClick = {
+                    navController.navigate("${Screen.EditEvent.route}/${acara.id}")
+                }) {
+                    Text(text = "Edit")
+                }
             }
         }
 

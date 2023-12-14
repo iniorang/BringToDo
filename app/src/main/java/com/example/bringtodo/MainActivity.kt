@@ -49,6 +49,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.bringtodo.frontend.AddEvent
+import com.example.bringtodo.frontend.EditEvent
 import com.example.bringtodo.frontend.FormTambahBarang
 import com.example.bringtodo.frontend.ListAcara
 import com.example.bringtodo.frontend.ListBarang
@@ -66,6 +67,9 @@ sealed class Screen(val route: String){
     object TambahBarang : Screen("TambahBarang")
     object DetailAcara : Screen("DetailAcara")
     object AddEvent :Screen("AddEvent")
+    object EditEvent :Screen("EditEvent/{id}"){
+        const val PARAM_ID = "id"
+    }
 }
 
 class MainActivity : ComponentActivity() {
@@ -140,6 +144,10 @@ fun Greeting() {
                 }
                 composable(Screen.DetailAcara.route){
                     DetailAcara(navController)
+                }
+                composable(Screen.EditEvent.route) { backStackEntry ->
+                    val id = backStackEntry.arguments?.getString(Screen.EditEvent.PARAM_ID)
+                    EditEvent(navController, id)
                 }
             }
         }
