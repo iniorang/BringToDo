@@ -683,7 +683,6 @@ export interface ApiAcaraAcara extends Schema.CollectionType {
     singularName: 'acara';
     pluralName: 'acaras';
     displayName: 'Acara';
-    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -692,7 +691,6 @@ export interface ApiAcaraAcara extends Schema.CollectionType {
     name: Attribute.String;
     desc: Attribute.Text;
     date: Attribute.Date;
-    time: Attribute.Time;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
