@@ -152,11 +152,11 @@ fun EditEvent(navController: NavController, id: String?,) {
                     .padding(0.dp, 30.dp)
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    AcaraController.updateAcara(id,addNameEvent,eventDesc,selectedDate,timeEvent){
-                            acara ->  if (acara != null) {
-                        navController.navigate(Screen.Acara.route)
-                    }
-                    }
+//                    AcaraController.updateAcara(id,addNameEvent,eventDesc,selectedDate,timeEvent){
+//                            acara ->  if (acara != null) {
+//                        navController.navigate(Screen.Acara.route)
+//                    }
+//                    }
                 },
             ) {
                 Text("Save")
