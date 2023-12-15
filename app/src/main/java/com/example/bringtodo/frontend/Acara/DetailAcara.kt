@@ -1,4 +1,4 @@
-package com.example.bringtodo
+package com.example.bringtodo.frontend.Acara
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

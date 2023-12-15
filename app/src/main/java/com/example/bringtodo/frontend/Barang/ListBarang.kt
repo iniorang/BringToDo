@@ -1,17 +1,14 @@
-package com.example.bringtodo.frontend
+package com.example.bringtodo.frontend.Barang
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,8 +36,8 @@ class ListBarang : ComponentActivity() {
             BringToDoTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
                 ) {
                     ListBarang()
                 }
@@ -49,38 +46,37 @@ class ListBarang : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListBarang(navController: NavController) {
     var barangs by remember {mutableStateOf<List<Barang>?>(null)}
     Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(Screen.TambahBarang.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = false
+            floatingActionButton = {
+                FloatingActionButton(
+                        onClick = {
+                            navController.navigate(Screen.TambahBarang.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = false
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "Add")
                 }
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
             }
-        }
     ) { innerPadding ->
         LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
+                modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize()
 //                .verticalScroll(lazyListState)
         ) {
             BarangController.getBarangs {response ->
                 barangs = response?.data
             }
             barangs?.forEach{ barang -> item{
-                Text(text = (barang.attr.name))
+                Text(text = barang.attr.name)
                 Button(onClick = {
                     BarangController.deleteBarangs(barang.id)
                     navController.navigate(Screen.Barang.route)

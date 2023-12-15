@@ -5,11 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -17,8 +13,6 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -39,20 +33,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.bringtodo.frontend.AddEvent
-import com.example.bringtodo.frontend.EditEvent
-import com.example.bringtodo.frontend.FormTambahBarang
-import com.example.bringtodo.frontend.ListAcara
-import com.example.bringtodo.frontend.ListBarang
+import com.example.bringtodo.frontend.Acara.AddEvent
+import com.example.bringtodo.frontend.Acara.DetailAcara
+import com.example.bringtodo.frontend.Acara.EditEvent
+import com.example.bringtodo.frontend.Barang.FormTambahBarang
+import com.example.bringtodo.frontend.Acara.ListAcara
+import com.example.bringtodo.frontend.Barang.ListBarang
 import com.example.bringtodo.ui.theme.BringToDoTheme
 data class IconForNav(
     val title : String,
@@ -145,9 +137,8 @@ fun Greeting() {
                 composable(Screen.DetailAcara.route){
                     DetailAcara(navController)
                 }
-                composable(Screen.EditEvent.route) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getString(Screen.EditEvent.PARAM_ID)
-                    EditEvent(navController, id)
+                composable(Screen.EditEvent.route) {
+                    EditEvent(navController)
                 }
             }
         }

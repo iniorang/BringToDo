@@ -10,7 +10,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
-class BarangData(
+data class BarangData(
     @SerializedName("data")
     val data:BarangBody
 )

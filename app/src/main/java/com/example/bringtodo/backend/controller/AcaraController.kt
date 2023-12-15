@@ -14,22 +14,22 @@ class AcaraController {
     companion object{
         private var acaraService : AcaraService = ApiClient.getService(AcaraService::class.java)
 
-        fun insertAcara(studioname: String, date: String,  callback: (Acara?) -> Unit) {
+        fun insertAcara(studioname: String, date: String, waktu:String,  callback: (Acara?) -> Unit) {
             val AcaraData = AcaraData(
-                AcaraBody(name = studioname, "", "2002-12-09")
+                AcaraBody(name = studioname, "", date, waktu)
             )
             acaraService.insert(AcaraData).enqueue(object : Callback<Acara> {
                 override fun onResponse(call: Call<Acara>, response: Response<Acara>): Unit =
                     if (response.isSuccessful) {
-//                        println(response.body())
+                        println(response.body())
                         callback(response.body())
                     } else {
-//                        println("Empty")
+                        println("HTTP Request Failed: ${response.code()} - ${response.message()}")
                         callback(null)
                     }
 
                 override fun onFailure(call: Call<Acara>, t: Throwable) {
-//                    println(t)
+                    println("HTTP Request Failure: ${t.message}")
                     callback(null)
                 }
             })

@@ -20,17 +20,17 @@ class BarangController {
         private var barangService : BarangService = ApiClient.getService(BarangService::class.java)
         fun insertBarang(name: String,callback: (Barang?) -> Unit) {
             val BarangData = BarangData(
-                BarangBody(name = name)
+                    BarangBody(name = name)
             )
             barangService.insert(BarangData).enqueue(object : Callback<Barang> {
                 override fun onResponse(call: Call<Barang>, response: Response<Barang>): Unit =
-                    if (response.isSuccessful) {
+                        if (response.isSuccessful) {
 //                        println(response.body())
-                        callback(response.body())
-                    } else {
+                            callback(response.body())
+                        } else {
 //                        println("Empty")
-                        callback(null)
-                    }
+                            callback(null)
+                        }
 
                 override fun onFailure(call: Call<Barang>, t: Throwable) {
 //                    println(t)
@@ -42,13 +42,13 @@ class BarangController {
         fun getBarangs(callback: (ApiResponse<List<Barang>>?) -> Unit){
             barangService.getAll().enqueue(object : Callback<ApiResponse<List<Barang>>> {
                 override fun onResponse(call: Call<ApiResponse<List<Barang>>>, response: Response<ApiResponse<List<Barang>>>): Unit =
-                    if (response.isSuccessful) {
-                        println(response.body())
-                        callback(response.body())
-                    } else {
+                        if (response.isSuccessful) {
+                            println(response.body())
+                            callback(response.body())
+                        } else {
 //                        println("Empty")
-                        callback(null)
-                    }
+                            callback(null)
+                        }
 
                 override fun onFailure(call: Call<ApiResponse<List<Barang>>>, t: Throwable) {
 //                    println(t)
@@ -60,17 +60,17 @@ class BarangController {
         fun deleteBarangs(id: Int) {
             barangService.delete(id).enqueue(object : Callback<ApiResponse<Barang>>{
                 override fun onResponse(
-                    call: Call<ApiResponse<Barang>>,
-                    response: Response<ApiResponse<Barang>>): Unit =
-                    if (response.isSuccessful) {
-                        println(response.body())
-                    } else {
+                        call: Call<ApiResponse<Barang>>,
+                        response: Response<ApiResponse<Barang>>): Unit =
+                        if (response.isSuccessful) {
+                            println(response.body())
+                        } else {
 //                        println("Empty")
-                    }
+                        }
 
                 override fun onFailure(
-                    call: Call<ApiResponse<Barang>>,
-                    t: Throwable
+                        call: Call<ApiResponse<Barang>>,
+                        t: Throwable
                 ) {
                     print(t.message)
                 }

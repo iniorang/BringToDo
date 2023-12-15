@@ -4,7 +4,8 @@
   "info": {
     "singularName": "acara",
     "pluralName": "acaras",
-    "displayName": "Acara"
+    "displayName": "Acara",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -19,6 +20,15 @@
     },
     "date": {
       "type": "date"
+    },
+    "time": {
+      "type": "time"
+    },
+    "barangs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::barang.barang",
+      "mappedBy": "acaras"
     }
   }
 }

@@ -1,4 +1,4 @@
-package com.example.bringtodo.frontend
+package com.example.bringtodo.frontend.Acara
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,13 +7,13 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -85,6 +85,7 @@ fun ListAcara(navController: NavController) {
             LazyColumn{
                 acaras?.forEach { acara -> item {
                     CardEvent(acara, navController)
+                    Spacer(modifier = Modifier.height(8.dp))
                 }}
             }
         }
@@ -98,7 +99,7 @@ fun CardEvent(acara:Acara, navController: NavController){
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
         ),
         modifier = Modifier
-            .height(150.dp)
+            .height(180.dp)
             .fillMaxWidth()
             .padding(horizontal = 15.dp)
             .combinedClickable(enabled = true, onClick = {
@@ -123,15 +124,22 @@ fun CardEvent(acara:Acara, navController: NavController){
                 modifier = Modifier.padding(start = 0.dp, top = 5.dp)
             )
             Text(
-                text = acara.attributes.date,
+                text = acara.attributes.date+"/"+acara.attributes.time,
                 fontSize = 13.sp,
                 modifier = Modifier.padding(start = 0.dp, top = 5.dp)
             )
-            Button(onClick = {
-                AcaraController.deleteAcara(acara.id)
-                navController.navigate(Screen.Acara.route)
-            }) {
-                Text(text = "delete")
+            Row {
+                Button(onClick = {
+                    navController.navigate(Screen.Acara.route)
+                }) {
+                    Text(text = "Edit")
+                }
+                Button(onClick = {
+                    AcaraController.deleteAcara(acara.id)
+                    navController.navigate(Screen.Acara.route)
+                }) {
+                    Text(text = "Delete")
+                }
             }
         }
 
