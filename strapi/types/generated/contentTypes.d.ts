@@ -362,81 +362,6 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
-export interface ApiAcaraAcara extends Schema.CollectionType {
-  collectionName: 'acaras';
-  info: {
-    singularName: 'acara';
-    pluralName: 'acaras';
-    displayName: 'Acara';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    name: Attribute.String;
-    desc: Attribute.Text;
-    date: Attribute.Date;
-    time: Attribute.Time;
-    barangs: Attribute.Relation<
-      'api::acara.acara',
-      'manyToMany',
-      'api::barang.barang'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::acara.acara',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::acara.acara',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiBarangBarang extends Schema.CollectionType {
-  collectionName: 'barangs';
-  info: {
-    singularName: 'barang';
-    pluralName: 'barangs';
-    displayName: 'Barang';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    name: Attribute.String;
-    acaras: Attribute.Relation<
-      'api::barang.barang',
-      'manyToMany',
-      'api::acara.acara'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::barang.barang',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::barang.barang',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -752,6 +677,81 @@ export interface PluginI18NLocale extends Schema.CollectionType {
   };
 }
 
+export interface ApiAcaraAcara extends Schema.CollectionType {
+  collectionName: 'acaras';
+  info: {
+    singularName: 'acara';
+    pluralName: 'acaras';
+    displayName: 'Acara';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    desc: Attribute.Text;
+    date: Attribute.Date;
+    time: Attribute.Time;
+    barangs: Attribute.Relation<
+      'api::acara.acara',
+      'manyToMany',
+      'api::barang.barang'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::acara.acara',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::acara.acara',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiBarangBarang extends Schema.CollectionType {
+  collectionName: 'barangs';
+  info: {
+    singularName: 'barang';
+    pluralName: 'barangs';
+    displayName: 'Barang';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    acaras: Attribute.Relation<
+      'api::barang.barang',
+      'manyToMany',
+      'api::acara.acara'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::barang.barang',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::barang.barang',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -762,14 +762,14 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
-      'api::acara.acara': ApiAcaraAcara;
-      'api::barang.barang': ApiBarangBarang;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'plugin::i18n.locale': PluginI18NLocale;
+      'api::acara.acara': ApiAcaraAcara;
+      'api::barang.barang': ApiBarangBarang;
     }
   }
 }
