@@ -32,6 +32,9 @@ interface AcaraService {
     @GET("acaras")
     fun getall() : Call<ApiResponse<List<Acara>>>
 
+    @GET("acaras/{id}")
+    fun getOneAcara(@Path("id")id: Int) : Call<ApiResponse<Acara>>
+
     @DELETE("acaras/{id}")
     fun delete(@Path("id") id: Int) : Call<ApiResponse<Acara>>
 

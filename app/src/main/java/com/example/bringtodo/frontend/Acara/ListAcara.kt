@@ -105,7 +105,7 @@ fun CardEvent(acara:Acara, navController: NavController,context: Context){
             .fillMaxWidth()
             .padding(horizontal = 15.dp)
             .combinedClickable(enabled = true, onClick = {
-                navController.navigate(Screen.DetailAcara.route) {
+                navController.navigate("${Screen.DetailAcara.route}/${acara.id}") {
                     popUpTo(navController.graph.findStartDestination().id) {
                         saveState = true
                     }

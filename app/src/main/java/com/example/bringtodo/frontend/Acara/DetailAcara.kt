@@ -18,12 +18,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.bringtodo.backend.controller.AcaraController
+import com.example.bringtodo.backend.model.Acara
 import com.example.bringtodo.ui.theme.BringToDoTheme
 
 class DetailAcara : ComponentActivity() {
@@ -44,21 +48,25 @@ class DetailAcara : ComponentActivity() {
 }
 
 @Composable
-fun DetailAcara(navController: NavController) {
+fun DetailAcara(navController: NavController,acara: Acara) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val id = navBackStackEntry?.arguments?.getString("id")?.toIntOrNull() ?: -1
+//    val detail = AcaraController.getOneAcaras(id)
+
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(15.dp, 30.dp)) {
-        Text(fontSize = 30.sp,text = "Beli Kasur")
+        Text(fontSize = 30.sp,text = acara.attributes.name)
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(fontSize = 20.sp,text = "Tanggal Acara")
         Spacer(modifier = Modifier.height(5.dp))
-        Text(fontSize = 30.sp,text = "12-05-2024")
+        Text(fontSize = 30.sp,text = acara.attributes.date)
 
         Spacer(modifier = Modifier.height(20.dp))
         Text(fontSize = 20.sp,text = "Waktu")
         Spacer(modifier = Modifier.height(5.dp))
-        Text(fontSize = 30.sp,text = "12:00")
+        Text(fontSize = 30.sp,text = acara.attributes.time)
 
         Spacer(modifier = Modifier.height(20.dp))
         Text(fontSize = 20.sp,text = "Yang Perlu dibawa")
