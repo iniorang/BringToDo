@@ -52,7 +52,7 @@ class DetailAcara : ComponentActivity() {
 
 @Composable
 
-fun DetailAcara(navController: NavController, id: Int) {
+fun DetailAcara(navController: NavController, id: String?) {
     val (acaraDetails, setAcaraDetails) = remember { mutableStateOf<Acara?>(null) }
 
     LaunchedEffect(key1 = id) {

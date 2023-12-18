@@ -53,7 +53,7 @@ class AcaraController {
             })
         }
 
-        fun getAcaraById(id: Int, callback: (ApiResponse<Acara>?) -> Unit) {
+        fun getAcaraById(id: String?, callback: (ApiResponse<Acara>?) -> Unit) {
             acaraService.getOneAcara(id).enqueue(object : Callback<ApiResponse<Acara>> {
                 override fun onResponse(
                     call: Call<ApiResponse<Acara>>,

@@ -139,7 +139,7 @@ fun AddEvent(navController: NavController) {
                 modifier = Modifier.padding(0.dp,30.dp)
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    AcaraController.insertAcara(addNameEvent,selectedDate,timeEvent){
+                    AcaraController.insertAcara(addNameEvent,selectedDate,"$timeEvent:00.000"){
                             acara ->  if (acara != null) {
                         navController.navigate(Screen.Acara.route)
                     }
@@ -251,7 +251,7 @@ fun TimePickerCompose(onTimeSelected: (String) -> Unit) {
 }
 
 private fun convertMillisToTime(timeMillis: Long): String {
-    val formatter = SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault())
+    val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
     return formatter.format(Date(timeMillis))
 }
 

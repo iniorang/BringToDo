@@ -33,7 +33,7 @@ interface AcaraService {
     fun getall() : Call<ApiResponse<List<Acara>>>
 
     @GET("acaras/{id}")
-    fun getOneAcara(@Path("id")id: Int) : Call<ApiResponse<Acara>>
+    fun getOneAcara(@Path("id")id: String?) : Call<ApiResponse<Acara>>
 
     @DELETE("acaras/{id}")
     fun delete(@Path("id") id: Int) : Call<ApiResponse<Acara>>

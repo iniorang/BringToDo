@@ -2,6 +2,7 @@ package com.example.bringtodo.frontend.Acara
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -96,6 +97,8 @@ fun ListAcara(navController: NavController, context: Context) {
 @Composable
 fun CardEvent(acara:Acara, navController: NavController,context: Context){
     val ntservices= NotificationService(context)
+
+
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -105,6 +108,7 @@ fun CardEvent(acara:Acara, navController: NavController,context: Context){
             .fillMaxWidth()
             .padding(horizontal = 15.dp)
             .combinedClickable(enabled = true, onClick = {
+                Log.d("CardEvent", "Acara ID: ${acara.id}")
                 navController.navigate("${Screen.DetailAcara.route}/${acara.id}") {
                     popUpTo(navController.graph.findStartDestination().id) {
                         saveState = true
