@@ -18,7 +18,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,40 +51,54 @@ class DetailAcara : ComponentActivity() {
 }
 
 @Composable
-fun DetailAcara(navController: NavController,acara: Acara) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val id = navBackStackEntry?.arguments?.getString("id")?.toIntOrNull() ?: -1
-//    val detail = AcaraController.getOneAcaras(id)
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(15.dp, 30.dp)) {
-        Text(fontSize = 30.sp,text = acara.attributes.name)
-        Spacer(modifier = Modifier.height(20.dp))
+fun DetailAcara(navController: NavController, id: Int) {
+    val (acaraDetails, setAcaraDetails) = remember { mutableStateOf<Acara?>(null) }
 
-        Text(fontSize = 20.sp,text = "Tanggal Acara")
-        Spacer(modifier = Modifier.height(5.dp))
-        Text(fontSize = 30.sp,text = acara.attributes.date)
+    LaunchedEffect(key1 = id) {
+        AcaraController.getAcaraById(id) { response ->
+            setAcaraDetails(response?.data)
+        }
+    }
 
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(fontSize = 20.sp,text = "Waktu")
-        Spacer(modifier = Modifier.height(5.dp))
-        Text(fontSize = 30.sp,text = acara.attributes.time)
+    acaraDetails?.let { acara ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(15.dp, 30.dp)
+        ) {
+            Text(fontSize = 30.sp, text = acara.attributes.name)
+            Spacer(modifier = Modifier.height(20.dp))
 
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(fontSize = 20.sp,text = "Yang Perlu dibawa")
-        Box {
+            Text(fontSize = 20.sp, text = "Tanggal Acara")
             Spacer(modifier = Modifier.height(5.dp))
-            Column(modifier = Modifier
-                .size(200.dp, 150.dp)
-                .verticalScroll(rememberScrollState())) {
-                repeat(20) {
-                    Text(text = "Barang Bawaan $it")
+            Text(fontSize = 30.sp, text = acara.attributes.date)
+
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(fontSize = 20.sp, text = "Waktu")
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(fontSize = 30.sp, text = acara.attributes.time)
+
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(fontSize = 20.sp, text = "Yang Perlu dibawa")
+            Box {
+                Spacer(modifier = Modifier.height(5.dp))
+                Column(
+                    modifier = Modifier
+                        .size(200.dp, 150.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    repeat(20) {
+                        Text(text = "Barang Bawaan $it")
+                    }
                 }
             }
         }
+    } ?: run {
+        Text(text = "Loading")
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

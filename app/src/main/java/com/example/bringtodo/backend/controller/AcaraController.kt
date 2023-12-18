@@ -53,17 +53,16 @@ class AcaraController {
             })
         }
 
-        fun getOneAcaras(id: Int,callback: (ApiResponse<List<Acara>>?) -> Unit){
+        fun getAcaraById(id: Int, callback: (ApiResponse<Acara>?) -> Unit) {
             acaraService.getOneAcara(id).enqueue(object : Callback<ApiResponse<Acara>> {
                 override fun onResponse(
                     call: Call<ApiResponse<Acara>>,
                     response: Response<ApiResponse<Acara>>
                 ) {
-                    if(response.isSuccessful){
-                        println(response.body())
-                    }else{
+                    if (response.isSuccessful) {
+                        callback(response.body())
+                    } else {
                         callback(null)
-                        println(response.body())
                     }
                 }
 
@@ -72,6 +71,7 @@ class AcaraController {
                 }
             })
         }
+
 
         fun deleteAcara(id: Int) {
             acaraService.delete(id).enqueue(object : Callback<ApiResponse<Acara>>{

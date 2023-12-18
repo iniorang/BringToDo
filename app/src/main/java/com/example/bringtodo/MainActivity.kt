@@ -153,8 +153,10 @@ fun Greeting(context: Context) {
                 composable(Screen.AddEvent.route){
                     AddEvent(navController)
                 }
-                composable(Screen.DetailAcara.route){
-                    DetailAcara(navController)
+                composable(Screen.DetailAcara.route + "/{id}") { backStackEntry ->
+                    val arguments = requireNotNull(backStackEntry.arguments)
+                    val id = arguments.getInt("id")
+                    DetailAcara(navController, id)
                 }
                 composable(Screen.EditEvent.route) {
                     EditEvent(navController)
