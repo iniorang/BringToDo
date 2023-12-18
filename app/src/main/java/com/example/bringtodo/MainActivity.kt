@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -24,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
@@ -39,6 +41,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.bringtodo.backend.NotificationService
 import com.example.bringtodo.frontend.Acara.AddEvent
 import com.example.bringtodo.frontend.Acara.DetailAcara
 import com.example.bringtodo.frontend.Acara.EditEvent
@@ -46,6 +49,12 @@ import com.example.bringtodo.frontend.Barang.FormTambahBarang
 import com.example.bringtodo.frontend.Acara.ListAcara
 import com.example.bringtodo.frontend.Barang.ListBarang
 import com.example.bringtodo.ui.theme.BringToDoTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import android.Manifest
+import androidx.compose.foundation.layout.Column
+
 data class IconForNav(
     val title : String,
     val selectedIcon : ImageVector,
@@ -65,11 +74,19 @@ sealed class Screen(val route: String){
 }
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             BringToDoTheme {
-                Greeting()
+                val postNotificationPermission=
+                    rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+                LaunchedEffect(key1 = true ){
+                    if(!postNotificationPermission.status.isGranted){
+                        postNotificationPermission.launchPermissionRequest()
+                    }
+                }
+                Greeting(this)
             }
         }
     }
@@ -77,11 +94,12 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Greeting() {
+fun Greeting(context: Context) {
     // A surface container using the 'background' color from the theme
     val navController = rememberNavController()
     val preferencesManager = PreferencesManager(context = LocalContext.current)
     val sharedPreferences: SharedPreferences = LocalContext.current.getSharedPreferences("auth", Context.MODE_PRIVATE)
+
     val items = listOf(
         IconForNav(
             title = "Acara",
@@ -120,10 +138,11 @@ fun Greeting() {
                     navController
                 )
             },) {innerPadding ->
+
             NavHost(navController = navController,
                 startDestination = Screen.Acara.route, modifier = Modifier.padding(paddingValues = innerPadding)){
                 composable(Screen.Acara.route){
-                    ListAcara(navController)
+                    ListAcara(navController,context)
                 }
                 composable(Screen.Barang.route){
                     ListBarang(navController)
@@ -140,6 +159,7 @@ fun Greeting() {
                 composable(Screen.EditEvent.route) {
                     EditEvent(navController)
                 }
+
             }
         }
     }
@@ -186,6 +206,6 @@ fun BottomBar(
 @Composable
 fun GreetingPreview() {
     BringToDoTheme {
-        Greeting()
+//        Greeting()
     }
 }

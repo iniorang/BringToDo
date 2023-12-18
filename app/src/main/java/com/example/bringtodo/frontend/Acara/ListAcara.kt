@@ -1,5 +1,6 @@
 package com.example.bringtodo.frontend.Acara
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.bringtodo.Screen
+import com.example.bringtodo.backend.NotificationService
 import com.example.bringtodo.backend.controller.AcaraController
 import com.example.bringtodo.backend.model.Acara
 import com.example.bringtodo.ui.theme.BringToDoTheme
@@ -60,9 +62,8 @@ class ListAcara : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun ListAcara(navController: NavController) {
+fun ListAcara(navController: NavController, context: Context) {
     var acaras by remember { mutableStateOf<List<Acara>?>(null) }
 
     Scaffold(floatingActionButton = { FloatingActionButton(onClick = { navController.navigate(Screen.AddEvent.route){
@@ -84,7 +85,7 @@ fun ListAcara(navController: NavController) {
             }
             LazyColumn{
                 acaras?.forEach { acara -> item {
-                    CardEvent(acara, navController)
+                    CardEvent(acara, navController,context)
                     Spacer(modifier = Modifier.height(8.dp))
                 }}
             }
@@ -93,7 +94,8 @@ fun ListAcara(navController: NavController) {
 }
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CardEvent(acara:Acara, navController: NavController){
+fun CardEvent(acara:Acara, navController: NavController,context: Context){
+    val ntservices= NotificationService(context)
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -107,7 +109,7 @@ fun CardEvent(acara:Acara, navController: NavController){
                     popUpTo(navController.graph.findStartDestination().id) {
                         saveState = true
                     }
-                    launchSingleTop = true
+                    launchSingleTop = false
                     restoreState = true
                 }
             })
@@ -119,18 +121,13 @@ fun CardEvent(acara:Acara, navController: NavController){
                 fontSize = 30.sp
             )
             Text(
-                text = acara.attributes.desc,
-                fontSize = 13.sp,
-                modifier = Modifier.padding(start = 0.dp, top = 5.dp)
-            )
-            Text(
                 text = acara.attributes.date+"/"+acara.attributes.time,
                 fontSize = 13.sp,
                 modifier = Modifier.padding(start = 0.dp, top = 5.dp)
             )
             Row {
                 Button(onClick = {
-                    navController.navigate(Screen.Acara.route)
+                    navController.navigate(Screen.EditEvent.route)
                 }) {
                     Text(text = "Edit")
                 }
@@ -139,6 +136,9 @@ fun CardEvent(acara:Acara, navController: NavController){
                     navController.navigate(Screen.Acara.route)
                 }) {
                     Text(text = "Delete")
+                }
+                Button(onClick = { ntservices.showBasicNotification()}) {
+                    Text(text = "Show Button")
                 }
             }
         }

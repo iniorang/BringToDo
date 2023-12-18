@@ -65,11 +65,7 @@ fun EditEvent(navController: NavController) {
     var isDatePickerVisible by remember { mutableStateOf(false) }
     var isTimePickerVisible by remember { mutableStateOf(false) }
 
-    Scaffold(
-            topBar = {
-                TopAppBar(title = { Text(text = "Add Event") })
-            }
-    ) {  innerPadding ->
+    Scaffold() {  innerPadding ->
         Column (
                 modifier = Modifier
                         .fillMaxWidth()
@@ -186,13 +182,3 @@ fun EditEvent(navController: NavController) {
     }
 }
 
-
-//private fun convertMillisToTime(timeMillis: Long): String {
-//    val formatter = SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault())
-//    return formatter.format(Date(timeMillis))
-//}
-//
-//private fun convertMillisToDate(millis: Long): String {
-//    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-//    return formatter.format(Date(millis))
-//}
