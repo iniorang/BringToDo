@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,7 +40,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.bringtodo.Screen
-import com.example.bringtodo.backend.NotificationService
 import com.example.bringtodo.backend.controller.AcaraController
 import com.example.bringtodo.backend.model.Acara
 import com.example.bringtodo.ui.theme.BringToDoTheme
@@ -96,9 +94,6 @@ fun ListAcara(navController: NavController, context: Context) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CardEvent(acara:Acara, navController: NavController,context: Context){
-    val ntservices= NotificationService(context)
-
-
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -140,9 +135,6 @@ fun CardEvent(acara:Acara, navController: NavController,context: Context){
                     navController.navigate(Screen.Acara.route)
                 }) {
                     Text(text = "Delete")
-                }
-                Button(onClick = { ntservices.showBasicNotification()}) {
-                    Text(text = "Show Button")
                 }
             }
         }

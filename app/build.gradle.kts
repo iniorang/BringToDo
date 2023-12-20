@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.work:work-runtime-ktx:2.7.0")
     implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")

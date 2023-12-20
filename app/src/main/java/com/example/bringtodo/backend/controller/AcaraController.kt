@@ -15,9 +15,7 @@ class AcaraController {
         private var acaraService : AcaraService = ApiClient.getService(AcaraService::class.java)
 
         fun insertAcara(studioname: String, date: String, waktu:String,  callback: (Acara?) -> Unit) {
-            val AcaraData = AcaraData(
-                AcaraBody(name = studioname, "", date, waktu)
-            )
+            val AcaraData = AcaraData(AcaraBody(name = studioname, "", date, waktu))
             acaraService.insert(AcaraData).enqueue(object : Callback<Acara> {
                 override fun onResponse(call: Call<Acara>, response: Response<Acara>): Unit =
                     if (response.isSuccessful) {

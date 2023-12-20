@@ -38,10 +38,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.example.bringtodo.Screen
+import com.example.bringtodo.backend.NotifHelper
 import com.example.bringtodo.backend.controller.AcaraController
 import com.example.bringtodo.ui.theme.BringToDoTheme
 import java.text.SimpleDateFormat
@@ -75,6 +78,7 @@ fun AddEvent(navController: NavController) {
     var eventDesc by remember { mutableStateOf("") }
     var isDatePickerVisible by remember { mutableStateOf(false) }
     var isTimePickerVisible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -141,6 +145,8 @@ fun AddEvent(navController: NavController) {
                 onClick = {
                     AcaraController.insertAcara(addNameEvent,selectedDate,"$timeEvent:00.000"){
                             acara ->  if (acara != null) {
+                        val dateTimeMillis = NotifHelper.convertDateTimeToMillis(acara.attributes.date, acara.attributes.time + ":00.000")
+                        NotifHelper.notifHelper(context, dateTimeMillis, addNameEvent)
                         navController.navigate(Screen.Acara.route)
                     }
                     }
