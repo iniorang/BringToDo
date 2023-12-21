@@ -207,7 +207,9 @@ fun DatePickerCompose(onDateSelected: (String) -> Unit) {
     val datePickerState = rememberDatePickerState(
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return true
+                val todayCalendar = Calendar.getInstance()
+                val todayMillis = todayCalendar.timeInMillis
+                return utcTimeMillis >= todayMillis
             }
         }
     )
