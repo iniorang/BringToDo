@@ -150,7 +150,7 @@ fun Greeting(context: Context) {
                     FormTambahBarang(navController)
                 }
                 composable(Screen.AddEvent.route){
-                    AddEvent(navController)
+                    AddEvent(navController,context)
                 }
                 composable(Screen.DetailAcara.route + "/{id}") { backStackEntry ->
                     val arguments = requireNotNull(backStackEntry.arguments)

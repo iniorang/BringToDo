@@ -1,6 +1,8 @@
 package com.example.bringtodo.backend.controller
 
+import android.content.Context
 import android.util.Log
+import com.example.bringtodo.backend.NotifHelper
 import com.example.bringtodo.backend.Service.AcaraBody
 import com.example.bringtodo.backend.Service.AcaraData
 import com.example.bringtodo.backend.Service.AcaraService
@@ -14,13 +16,22 @@ class AcaraController {
     companion object{
         private var acaraService : AcaraService = ApiClient.getService(AcaraService::class.java)
 
-        fun insertAcara(studioname: String, date: String, waktu:String,  callback: (Acara?) -> Unit) {
+        fun insertAcara(studioname: String, date: String, waktu:String, context: Context,  callback: (Acara?) -> Unit) {
             val AcaraData = AcaraData(AcaraBody(name = studioname, "", date, waktu))
             acaraService.insert(AcaraData).enqueue(object : Callback<Acara> {
                 override fun onResponse(call: Call<Acara>, response: Response<Acara>): Unit =
                     if (response.isSuccessful) {
                         println(response.body())
                         callback(response.body())
+                        val acara = response.body()
+                        callback(acara)
+                        if (acara != null) {
+                            val dateTimeMillis = NotifHelper.convertDateTimeToMillis(date, waktu)
+                            println("Converted DateTimeMillis: $dateTimeMillis")
+                            NotifHelper.notifHelper(context, dateTimeMillis, studioname)
+                        }else{
+//                            Todo
+                        }
                     } else {
                         println("HTTP Request Failed: ${response.code()} - ${response.message()}")
                         callback(null)

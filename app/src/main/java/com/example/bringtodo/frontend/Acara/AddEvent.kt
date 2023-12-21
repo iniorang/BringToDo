@@ -1,5 +1,6 @@
 package com.example.bringtodo.frontend.Acara
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -39,7 +40,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
@@ -71,7 +71,7 @@ class AddEvent : ComponentActivity() {
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEvent(navController: NavController) {
+fun AddEvent(navController: NavController,context: Context) {
     var selectedDate by remember { mutableStateOf("") }
     var timeEvent by remember { mutableStateOf("") }
     var addNameEvent by remember {mutableStateOf("")}
@@ -143,10 +143,8 @@ fun AddEvent(navController: NavController) {
                 modifier = Modifier.padding(0.dp,30.dp)
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    AcaraController.insertAcara(addNameEvent,selectedDate,"$timeEvent:00.000"){
+                    AcaraController.insertAcara(addNameEvent,selectedDate,"$timeEvent:00.000", context){
                             acara ->  if (acara != null) {
-                        val dateTimeMillis = NotifHelper.convertDateTimeToMillis(acara.attributes.date, acara.attributes.time + ":00.000")
-                        NotifHelper.notifHelper(context, dateTimeMillis, addNameEvent)
                         navController.navigate(Screen.Acara.route)
                     }
                     }

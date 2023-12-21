@@ -11,20 +11,20 @@ import java.util.concurrent.TimeUnit
 
 object NotifHelper {
     fun convertDateTimeToMillis(date: String, time: String): Long {
-        val dateTimeString = "$date $time"
+        println("Date: $date")
+        println("Waktu: $time")
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-
         try {
+            val dateTimeString = "$date $time"
             val dateTime = formatter.parse(dateTimeString)
             return dateTime?.time ?: 0
         } catch (e: ParseException) {
             e.printStackTrace()
         }
-
         return 0
     }
 
-    fun notifHelper(context: Context,time:Long,name:String){
+    fun notifHelper(context: Context, time: Long, name: String) {
         val currentTimeMillis = System.currentTimeMillis()
         val oneDayInMillis = 24 * 60 * 60 * 1000
         val notificationTimeMillis = time - oneDayInMillis
