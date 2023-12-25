@@ -51,7 +51,6 @@ class DetailAcara : ComponentActivity() {
 }
 
 @Composable
-
 fun DetailAcara(navController: NavController, id: String?) {
     val (acaraDetails, setAcaraDetails) = remember { mutableStateOf<Acara?>(null) }
 
@@ -88,9 +87,10 @@ fun DetailAcara(navController: NavController, id: String?) {
                         .size(200.dp, 150.dp)
                         .verticalScroll(rememberScrollState())
                 ) {
-                    repeat(20) {
-                        Text(text = "Barang Bawaan $it")
-                    }
+                    Text(
+                        text = acara.attributes.bawaan.split(", ")
+                            .joinToString(separator = "\n") { it.trim() }
+                    )
                 }
             }
         }

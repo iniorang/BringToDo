@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,12 +16,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -94,13 +99,14 @@ fun ListAcara(navController: NavController, context: Context) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CardEvent(acara:Acara, navController: NavController,context: Context){
+    var expanded by remember { mutableStateOf(false) }
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
         ),
         modifier = Modifier
-            .height(180.dp)
             .fillMaxWidth()
+            .wrapContentHeight()
             .padding(horizontal = 15.dp)
             .combinedClickable(enabled = true, onClick = {
                 Log.d("CardEvent", "Acara ID: ${acara.id}")
@@ -111,6 +117,8 @@ fun CardEvent(acara:Acara, navController: NavController,context: Context){
                     launchSingleTop = false
                     restoreState = true
                 }
+            }, onLongClick = {
+                expanded = true
             })
     ) {
         Column(modifier = Modifier.padding(horizontal = 25.dp, vertical = 10.dp)) {
@@ -124,19 +132,20 @@ fun CardEvent(acara:Acara, navController: NavController,context: Context){
                 fontSize = 13.sp,
                 modifier = Modifier.padding(start = 0.dp, top = 5.dp)
             )
-            Row {
-                Button(onClick = {
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            ) {
+                DropdownMenuItem(text = { Text(text = "Edit") }, onClick = {
                     navController.navigate(Screen.EditEvent.route)
-                }) {
-                    Text(text = "Edit")
-                }
-                Button(onClick = {
+                    expanded = false })
+                DropdownMenuItem(text = { Text(text = "Delete") }, onClick = {
                     AcaraController.deleteAcara(acara.id)
                     navController.navigate(Screen.Acara.route)
-                }) {
-                    Text(text = "Delete")
-                }
+                    expanded = false })
             }
+            
         }
 
     }

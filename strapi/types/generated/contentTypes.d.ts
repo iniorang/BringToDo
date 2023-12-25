@@ -693,11 +693,7 @@ export interface ApiAcaraAcara extends Schema.CollectionType {
     desc: Attribute.Text;
     date: Attribute.Date;
     time: Attribute.Time;
-    barangs: Attribute.Relation<
-      'api::acara.acara',
-      'manyToMany',
-      'api::barang.barang'
-    >;
+    bawaan: Attribute.Text;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -729,11 +725,6 @@ export interface ApiBarangBarang extends Schema.CollectionType {
   };
   attributes: {
     name: Attribute.String;
-    acaras: Attribute.Relation<
-      'api::barang.barang',
-      'manyToMany',
-      'api::acara.acara'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

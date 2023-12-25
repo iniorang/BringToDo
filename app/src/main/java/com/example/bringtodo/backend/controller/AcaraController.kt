@@ -16,8 +16,9 @@ class AcaraController {
     companion object{
         private var acaraService : AcaraService = ApiClient.getService(AcaraService::class.java)
 
-        fun insertAcara(studioname: String, date: String, waktu:String, context: Context,  callback: (Acara?) -> Unit) {
-            val AcaraData = AcaraData(AcaraBody(name = studioname, "", date, waktu))
+        fun insertAcara(studioname: String, date: String, waktu:String, barangForms: List<String>, context: Context,  callback: (Acara?) -> Unit) {
+            val bawaan = barangForms.joinToString(", ")
+            val AcaraData = AcaraData(AcaraBody(name = studioname, "", date, waktu, bawaan))
             acaraService.insert(AcaraData).enqueue(object : Callback<Acara> {
                 override fun onResponse(call: Call<Acara>, response: Response<Acara>): Unit =
                     if (response.isSuccessful) {
@@ -102,8 +103,8 @@ class AcaraController {
             })
         }
 
-        fun updateAcara(id: String?, studioname: String,desc: String,date: String,time: String,callback: (Acara?) -> Unit){ 
-            val updateAcara = AcaraData(AcaraBody(name = studioname,desc = desc,date = date,time = time))
+        fun updateAcara(id: String?, studioname: String,desc: String,date: String,time: String, bawaan: String,callback: (Acara?) -> Unit){
+            val updateAcara = AcaraData(AcaraBody(name = studioname,desc = desc,date = date,time = time, bawaan))
             acaraService.update(id,updateAcara).enqueue(object : Callback<Acara>{
                 override fun onResponse(call: Call<Acara>, response: Response<Acara>) {
                     if(response.isSuccessful){

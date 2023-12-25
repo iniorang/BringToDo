@@ -14,12 +14,6 @@
   "attributes": {
     "name": {
       "type": "string"
-    },
-    "acaras": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::acara.acara",
-      "inversedBy": "barangs"
     }
   }
 }

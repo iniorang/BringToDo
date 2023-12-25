@@ -24,11 +24,8 @@
     "time": {
       "type": "time"
     },
-    "barangs": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::barang.barang",
-      "mappedBy": "acaras"
+    "bawaan": {
+      "type": "text"
     }
   }
 }

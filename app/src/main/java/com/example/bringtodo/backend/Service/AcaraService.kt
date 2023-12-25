@@ -23,7 +23,9 @@ data class AcaraBody(
     @SerializedName("date")
     val date: String,
     @SerializedName("time")
-    val time: String
+    val time: String,
+    @SerializedName("bawaan")
+    val bawaan: String
 )
 interface AcaraService {
     @POST("acaras")

@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.AlertDialog
@@ -78,18 +80,26 @@ fun AddEvent(navController: NavController,context: Context) {
     var eventDesc by remember { mutableStateOf("") }
     var isDatePickerVisible by remember { mutableStateOf(false) }
     var isTimePickerVisible by remember { mutableStateOf(false) }
+    var barangForms by remember { mutableStateOf(listOf("")) }
     val context = LocalContext.current
 
-    Scaffold(
-        topBar = {
-            TopAppBar(title = { Text(text = "Add Event") })
+    fun addBarangForm() {
+        barangForms = barangForms + ""
+    }
+
+    fun removeBarangForm(index: Int) {
+        if (barangForms.size > 1) {
+            barangForms = barangForms.toMutableList().also {
+                it.removeAt(index)
+            }
         }
-    ) {  innerPadding ->
+    }
+
+    Scaffold() {  innerPadding ->
         Column (
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(innerPadding),
-
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
             ) {
             Column (
                 modifier = Modifier
@@ -125,12 +135,11 @@ fun AddEvent(navController: NavController,context: Context) {
                     }
                 }
             }
-
             Column(
                 modifier = Modifier.padding(30.dp,10.dp,30.dp,0.dp)
             ){
                 Text(
-                    text = "Add Name Event"
+                    text = "Nama Event"
                 )
                 TextField(
                     value = addNameEvent,
@@ -139,11 +148,39 @@ fun AddEvent(navController: NavController,context: Context) {
 
                     })
             }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                barangForms.forEachIndexed { index, barangForm ->
+                    BarangFormInput(
+                        barangForm = barangForm,
+                        onValueChange = { newValue ->
+                            barangForms = barangForms.toMutableList().also {
+                                it[index] = newValue
+                            }
+                        },
+                        onRemoveClicked = { removeBarangForm(index) }
+                    )
+                }
+
+                Button(
+                    onClick = { addBarangForm() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text("Tambah Barang")
+                }
+            }
+
+
             Button(
                 modifier = Modifier.padding(0.dp,30.dp)
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    AcaraController.insertAcara(addNameEvent,selectedDate,"$timeEvent:00.000", context){
+                    AcaraController.insertAcara(addNameEvent,selectedDate,"$timeEvent:00.000",barangForms,context){
                             acara ->  if (acara != null) {
                         navController.navigate(Screen.Acara.route)
                     }
@@ -200,6 +237,38 @@ fun AddEvent(navController: NavController,context: Context) {
         }
     }
 }
+
+@Composable
+fun BarangFormInput(barangForm: String, onValueChange: (String) -> Unit, onRemoveClicked: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        TextField(
+            value = barangForm,
+            onValueChange = { newValue ->
+                onValueChange(newValue)
+            },
+            label = { Text("Nama Barang") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            Button(onClick = onRemoveClicked) {
+                Text("Hapus Barang")
+            }
+        }
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
