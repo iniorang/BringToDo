@@ -125,11 +125,11 @@ fun CardEvent(acara:Acara, navController: NavController,context: Context){
             Text(
                 text = acara.attributes.name,
                 textAlign = TextAlign.Center,
-                fontSize = 30.sp
+                fontSize = 35.sp
             )
             Text(
-                text = acara.attributes.date+"/"+acara.attributes.time,
-                fontSize = 13.sp,
+                text = acara.attributes.date+"/"+convertTimeFormat(acara.attributes.time),
+                fontSize = 15.sp,
                 modifier = Modifier.padding(start = 0.dp, top = 5.dp)
             )
             DropdownMenu(
@@ -138,7 +138,7 @@ fun CardEvent(acara:Acara, navController: NavController,context: Context){
                 modifier = Modifier.background(MaterialTheme.colorScheme.background)
             ) {
                 DropdownMenuItem(text = { Text(text = "Edit") }, onClick = {
-                    navController.navigate(Screen.EditEvent.route)
+                    navController.navigate("${Screen.EditEvent.route}/${acara.id}")
                     expanded = false })
                 DropdownMenuItem(text = { Text(text = "Delete") }, onClick = {
                     AcaraController.deleteAcara(acara.id)

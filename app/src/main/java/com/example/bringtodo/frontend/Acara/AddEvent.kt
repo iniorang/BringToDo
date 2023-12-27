@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
@@ -177,7 +178,8 @@ fun AddEvent(navController: NavController,context: Context) {
 
 
             Button(
-                modifier = Modifier.padding(0.dp,30.dp)
+                modifier = Modifier
+                    .padding(0.dp, 30.dp)
                     .align(Alignment.CenterHorizontally),
                 onClick = {
                     AcaraController.insertAcara(addNameEvent,selectedDate,"$timeEvent:00.000",barangForms,context){
@@ -240,7 +242,7 @@ fun AddEvent(navController: NavController,context: Context) {
 
 @Composable
 fun BarangFormInput(barangForm: String, onValueChange: (String) -> Unit, onRemoveClicked: () -> Unit) {
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
@@ -252,20 +254,11 @@ fun BarangFormInput(barangForm: String, onValueChange: (String) -> Unit, onRemov
             },
             label = { Text("Nama Barang") },
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(bottom = 8.dp)
         )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            horizontalArrangement = Arrangement.End
-        ) {
-            Button(onClick = onRemoveClicked) {
-                Text("Hapus Barang")
+            IconButton(onClick = onRemoveClicked) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Hapus Barang")
             }
-        }
     }
 }
 

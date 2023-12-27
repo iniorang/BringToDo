@@ -103,18 +103,27 @@ class AcaraController {
             })
         }
 
-        fun updateAcara(id: String?, studioname: String,desc: String,date: String,time: String, bawaan: String,callback: (Acara?) -> Unit){
-            val updateAcara = AcaraData(AcaraBody(name = studioname,desc = desc,date = date,time = time, bawaan))
-            acaraService.update(id,updateAcara).enqueue(object : Callback<Acara>{
-                override fun onResponse(call: Call<Acara>, response: Response<Acara>) {
-                    if(response.isSuccessful){
+        fun updateAcara(id: String?, studioname: String,desc: String,date: String,waktu: String, barangForms: List<String>,callback: (Acara?) -> Unit){
+            val bawaan = barangForms.joinToString(", ")
+            val AcaraData = AcaraData(AcaraBody(name = studioname, "", date, waktu, bawaan))
+            acaraService.update(id,AcaraData).enqueue(object : Callback<Acara>{
+                override fun onResponse(call: Call<Acara>, response: Response<Acara>): Unit =
+                    if (response.isSuccessful) {
                         println(response.body())
                         callback(response.body())
-                    }else{
+                        val acara = response.body()
+                        callback(acara)
+                        if (acara != null) {
+                            val dateTimeMillis = NotifHelper.convertDateTimeToMillis(date, waktu)
+                            println("Converted DateTimeMillis: $dateTimeMillis")
+//                            NotifHelper.notifHelper(context, dateTimeMillis, studioname)
+                        }else{
+//                            Todo
+                        }
+                    } else {
                         println("HTTP Request Failed: ${response.code()} - ${response.message()}")
                         callback(null)
                     }
-                }
 
                 override fun onFailure(call: Call<Acara>, t: Throwable) {
                     println("HTTP Request Failure: ${t.message}")

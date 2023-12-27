@@ -67,9 +67,7 @@ sealed class Screen(val route: String){
     object TambahBarang : Screen("TambahBarang")
     object DetailAcara : Screen("DetailAcara")
     object AddEvent :Screen("AddEvent")
-    object EditEvent :Screen("EditEvent/{id}"){
-        const val PARAM_ID = "id"
-    }
+    object EditEvent :Screen("EditEvent")
 }
 
 class MainActivity : ComponentActivity() {
@@ -126,18 +124,7 @@ fun Greeting(context: Context) {
             topBar = {
                 TopAppBar(title = { Text(text = titleCur)})
             },
-            bottomBar = {
-                BottomBar(
-                    items = items,
-                    selectedItem = selectedItem,
-                    onItemSelected = { index ->
-                        selectedItem = index
-                        titleCur = items[index].title
-                    },
-                    navController
-                )
-            },) {innerPadding ->
-
+            ) {innerPadding ->
             NavHost(navController = navController,
                 startDestination = Screen.Acara.route, modifier = Modifier.padding(paddingValues = innerPadding)){
                 composable(Screen.Acara.route){
@@ -157,10 +144,11 @@ fun Greeting(context: Context) {
                     val id = arguments.getString("id")
                     DetailAcara(navController, id)
                 }
-                composable(Screen.EditEvent.route) {
-                    EditEvent(navController)
+                composable(Screen.EditEvent.route + "/{id}") { backStackEntry ->
+                    val arguments = requireNotNull(backStackEntry.arguments)
+                    val id = arguments.getString("id")
+                    EditEvent(navController,id)
                 }
-
             }
         }
     }
