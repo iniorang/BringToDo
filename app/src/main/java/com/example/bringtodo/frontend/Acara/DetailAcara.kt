@@ -1,5 +1,7 @@
 package com.example.bringtodo.frontend.Acara
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,10 +56,13 @@ class DetailAcara : ComponentActivity() {
 @Composable
 fun DetailAcara(navController: NavController, id: String?) {
     val (acaraDetails, setAcaraDetails) = remember { mutableStateOf<Acara?>(null) }
-
+    val sharedPreferences: SharedPreferences = LocalContext.current.getSharedPreferences("auth", Context.MODE_PRIVATE)
+    val jwt = sharedPreferences.getString("jwt","")
     LaunchedEffect(key1 = id) {
-        AcaraController.getAcaraById(id) { response ->
-            setAcaraDetails(response?.data)
+        if (jwt != null) {
+            AcaraController.getAcaraById(jwt, id) { response ->
+                setAcaraDetails(response?.data)
+            }
         }
     }
 

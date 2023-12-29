@@ -1,5 +1,7 @@
 package com.example.bringtodo.frontend.Barang
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -50,6 +53,9 @@ class FormTambahBarang : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormTambahBarang(navController: NavController) {
+    val sharedPreferences: SharedPreferences = LocalContext.current.getSharedPreferences("auth", Context.MODE_PRIVATE)
+    var jwt = sharedPreferences.getString("jwt", "")
+
     var namaBarang by remember{ mutableStateOf("") }
     Box (modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
         Column(
@@ -64,10 +70,11 @@ fun FormTambahBarang(navController: NavController) {
             Spacer(modifier = Modifier.height(15.dp))
             Button(
                 onClick = {
-                    BarangController.insertBarang(namaBarang){
-                            barang -> if(barang != null){
-                        navController.navigate(Screen.Barang.route)
-                    }
+                    if (jwt != null) {
+                        BarangController.insertBarang(jwt, namaBarang){ barang -> if(barang != null){
+                            navController.navigate(Screen.Barang.route)
+                        }
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth()

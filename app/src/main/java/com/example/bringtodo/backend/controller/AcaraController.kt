@@ -14,11 +14,12 @@ import retrofit2.Callback
 
 class AcaraController {
     companion object{
-        private var acaraService : AcaraService = ApiClient.getService(AcaraService::class.java)
 
-        fun insertAcara(studioname: String, date: String, waktu:String, barangForms: List<String>, context: Context,  callback: (Acara?) -> Unit) {
+        fun insertAcara(jwt: String, studioname: String, date: String, waktu:String, barangForms: List<String>, context: Context,  callback: (Acara?) -> Unit) {
             val bawaan = barangForms.joinToString(", ")
             val AcaraData = AcaraData(AcaraBody(name = studioname, "", date, waktu, bawaan))
+            var acaraService : AcaraService = ApiClient.getAuthService(AcaraService::class.java, jwt)
+
             acaraService.insert(AcaraData).enqueue(object : Callback<Acara> {
                 override fun onResponse(call: Call<Acara>, response: Response<Acara>): Unit =
                     if (response.isSuccessful) {
@@ -45,7 +46,9 @@ class AcaraController {
             })
         }
 
-        fun getAcaras(callback: (ApiResponse<List<Acara>>?) -> Unit){
+        fun getAcaras(jwt:String, callback: (ApiResponse<List<Acara>>?) -> Unit){
+            var acaraService : AcaraService = ApiClient.getAuthService(AcaraService::class.java, jwt)
+
             acaraService.getall().enqueue(object : Callback<ApiResponse<List<Acara>>> {
                 override fun onResponse(call: Call<ApiResponse<List<Acara>>>, response: Response<ApiResponse<List<Acara>>>): Unit =
                     if (response.isSuccessful) {
@@ -63,7 +66,9 @@ class AcaraController {
             })
         }
 
-        fun getAcaraById(id: String?, callback: (ApiResponse<Acara>?) -> Unit) {
+        fun getAcaraById(jwt:String, id: String?, callback: (ApiResponse<Acara>?) -> Unit) {
+            var acaraService : AcaraService = ApiClient.getAuthService(AcaraService::class.java, jwt)
+
             acaraService.getOneAcara(id).enqueue(object : Callback<ApiResponse<Acara>> {
                 override fun onResponse(
                     call: Call<ApiResponse<Acara>>,
@@ -83,7 +88,8 @@ class AcaraController {
         }
 
 
-        fun deleteAcara(id: Int) {
+        fun deleteAcara(jwt:String, id: Int) {
+            var acaraService : AcaraService = ApiClient.getAuthService(AcaraService::class.java, jwt)
             acaraService.delete(id).enqueue(object : Callback<ApiResponse<Acara>>{
                 override fun onResponse(
                     call: Call<ApiResponse<Acara>>,
@@ -103,9 +109,11 @@ class AcaraController {
             })
         }
 
-        fun updateAcara(id: String?, studioname: String,desc: String,date: String,waktu: String, barangForms: List<String>,callback: (Acara?) -> Unit){
+        fun updateAcara(jwt:String, id: String?, studioname: String,desc: String,date: String,waktu: String, barangForms: List<String>,callback: (Acara?) -> Unit){
             val bawaan = barangForms.joinToString(", ")
             val AcaraData = AcaraData(AcaraBody(name = studioname, "", date, waktu, bawaan))
+            var acaraService : AcaraService = ApiClient.getAuthService(AcaraService::class.java, jwt)
+
             acaraService.update(id,AcaraData).enqueue(object : Callback<Acara>{
                 override fun onResponse(call: Call<Acara>, response: Response<Acara>): Unit =
                     if (response.isSuccessful) {

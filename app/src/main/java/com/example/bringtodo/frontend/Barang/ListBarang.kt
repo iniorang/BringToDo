@@ -1,5 +1,7 @@
 package com.example.bringtodo.frontend.Barang
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -48,6 +51,9 @@ class ListBarang : ComponentActivity() {
 
 @Composable
 fun ListBarang(navController: NavController) {
+    val sharedPreferences: SharedPreferences = LocalContext.current.getSharedPreferences("auth", Context.MODE_PRIVATE)
+    var jwt = sharedPreferences.getString("jwt", "")
+
     var barangs by remember {mutableStateOf<List<Barang>?>(null)}
     Scaffold(
             floatingActionButton = {
@@ -72,13 +78,17 @@ fun ListBarang(navController: NavController) {
                         .fillMaxSize()
 //                .verticalScroll(lazyListState)
         ) {
-            BarangController.getBarangs {response ->
-                barangs = response?.data
+            if (jwt != null) {
+                BarangController.getBarangs(jwt) {response ->
+                    barangs = response?.data
+                }
             }
             barangs?.forEach{ barang -> item{
                 Text(text = barang.attr.name)
                 Button(onClick = {
-                    BarangController.deleteBarangs(barang.id)
+                    if (jwt != null) {
+                        BarangController.deleteBarangs(jwt, barang.id)
+                    }
                     navController.navigate(Screen.Barang.route)
                 }) {
                     Text(text = "Hapus")
