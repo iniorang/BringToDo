@@ -1,7 +1,5 @@
 package com.example.bringtodo.frontend.Acara
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -77,16 +75,12 @@ fun EditEvent(navController: NavController,id : String?) {
     var isDatePickerVisible by remember { mutableStateOf(false) }
     var isTimePickerVisible by remember { mutableStateOf(false) }
     var barangForms by remember { mutableStateOf(listOf("")) }
-    val sharedPreferences: SharedPreferences = LocalContext.current.getSharedPreferences("auth", Context.MODE_PRIVATE)
-    val jwt = sharedPreferences.getString("jwt","")
     val context = LocalContext.current
     val (acaraDetails, setAcaraDetails) = remember { mutableStateOf<Acara?>(null) }
 
     LaunchedEffect(key1 = id) {
-        if (jwt != null) {
-            AcaraController.getAcaraById(jwt, id) { response ->
-                setAcaraDetails(response?.data)
-            }
+        AcaraController.getAcaraById(id) { response ->
+            setAcaraDetails(response?.data)
         }
     }
 
@@ -104,15 +98,13 @@ fun EditEvent(navController: NavController,id : String?) {
 
     LaunchedEffect(id) {
         if (!id.isNullOrBlank()) {
-            if (jwt != null) {
-                getAcaraById(jwt, id) { response ->
-                    response?.data?.let { acara ->
-                        selectedDate = acara.attributes.date
-                        timeEvent = convertTimeFormat(acara.attributes.time)
-                        addNameEvent = acara.attributes.name
-                        barangForms = acara.attributes.bawaan.split(",").map { it.trim() }
-                            .filter { it.isNotBlank() }.toMutableList()
-                    }
+            getAcaraById(id) { response ->
+                response?.data?.let { acara ->
+                    selectedDate = acara.attributes.date
+                    timeEvent = convertTimeFormat(acara.attributes.time)
+                    addNameEvent = acara.attributes.name
+                    barangForms = acara.attributes.bawaan.split(",").map { it.trim() }
+                        .filter { it.isNotBlank() }.toMutableList()
                 }
             }
         }
@@ -205,11 +197,10 @@ fun EditEvent(navController: NavController,id : String?) {
                     .padding(0.dp, 30.dp)
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    if (jwt != null) {
-                        AcaraController.updateAcara(jwt,id,addNameEvent,"",selectedDate,"$timeEvent:00.000",barangForms){ acara ->  if (acara != null) {
-                            navController.navigate(Screen.Acara.route)
-                        }
-                        }
+                    AcaraController.updateAcara(id,addNameEvent,"",selectedDate,"$timeEvent:00.000",barangForms){
+                            acara ->  if (acara != null) {
+                        navController.navigate(Screen.Acara.route)
+                    }
                     }
                 },
             ) {

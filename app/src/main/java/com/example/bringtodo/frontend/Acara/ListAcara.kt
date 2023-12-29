@@ -1,7 +1,6 @@
 package com.example.bringtodo.frontend.Acara
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -39,7 +38,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -71,8 +69,7 @@ class ListAcara : ComponentActivity() {
 @Composable
 fun ListAcara(navController: NavController, context: Context) {
     var acaras by remember { mutableStateOf<List<Acara>?>(null) }
-    val sharedPreferences: SharedPreferences = LocalContext.current.getSharedPreferences("auth", Context.MODE_PRIVATE)
-    val jwt = sharedPreferences.getString("jwt","")
+
     Scaffold(floatingActionButton = { FloatingActionButton(onClick = { navController.navigate(Screen.AddEvent.route){
         popUpTo(navController.graph.findStartDestination().id) {
             saveState = true
@@ -87,10 +84,8 @@ fun ListAcara(navController: NavController, context: Context) {
                 .padding(paddingValues = innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            if (jwt != null) {
-                AcaraController.getAcaras(jwt) { response ->
-                    acaras = response?.data
-                }
+            AcaraController.getAcaras { response ->
+                acaras = response?.data
             }
             LazyColumn{
                 acaras?.forEach { acara -> item {
@@ -104,8 +99,6 @@ fun ListAcara(navController: NavController, context: Context) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CardEvent(acara:Acara, navController: NavController,context: Context){
-    val sharedPreferences: SharedPreferences = LocalContext.current.getSharedPreferences("auth", Context.MODE_PRIVATE)
-    val jwt = sharedPreferences.getString("jwt","")
     var expanded by remember { mutableStateOf(false) }
     Card(
         colors = CardDefaults.cardColors(
@@ -148,9 +141,7 @@ fun CardEvent(acara:Acara, navController: NavController,context: Context){
                     navController.navigate("${Screen.EditEvent.route}/${acara.id}")
                     expanded = false })
                 DropdownMenuItem(text = { Text(text = "Delete") }, onClick = {
-                    if (jwt != null) {
-                        AcaraController.deleteAcara(jwt,acara.id)
-                    }
+                    AcaraController.deleteAcara(acara.id)
                     navController.navigate(Screen.Acara.route)
                     expanded = false })
             }

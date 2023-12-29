@@ -1,7 +1,6 @@
 package com.example.bringtodo.frontend.Acara
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -84,8 +83,7 @@ fun AddEvent(navController: NavController,context: Context) {
     var isTimePickerVisible by remember { mutableStateOf(false) }
     var barangForms by remember { mutableStateOf(listOf("")) }
     val context = LocalContext.current
-    val sharedPreferences: SharedPreferences = LocalContext.current.getSharedPreferences("auth", Context.MODE_PRIVATE)
-    val jwt = sharedPreferences.getString("jwt","")
+
     fun addBarangForm() {
         barangForms = barangForms + ""
     }
@@ -184,11 +182,10 @@ fun AddEvent(navController: NavController,context: Context) {
                     .padding(0.dp, 30.dp)
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    if (jwt != null) {
-                        AcaraController.insertAcara(jwt, addNameEvent,selectedDate,"$timeEvent:00.000",barangForms,context){ acara ->  if (acara != null) {
-                            navController.navigate(Screen.Acara.route)
-                        }
-                        }
+                    AcaraController.insertAcara(addNameEvent,selectedDate,"$timeEvent:00.000",barangForms,context){
+                            acara ->  if (acara != null) {
+                        navController.navigate(Screen.Acara.route)
+                    }
                     }
                 },
             ) {

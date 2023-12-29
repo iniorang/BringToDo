@@ -17,8 +17,8 @@ import retrofit2.Callback
 
 class BarangController {
     companion object{
-        fun insertBarang(jwt: String, name: String,callback: (Barang?) -> Unit) {
-            var barangService : BarangService = ApiClient.getAuthService(BarangService::class.java, jwt)
+        private var barangService : BarangService = ApiClient.getService(BarangService::class.java)
+        fun insertBarang(name: String,callback: (Barang?) -> Unit) {
             val BarangData = BarangData(
                     BarangBody(name = name)
             )
@@ -39,9 +39,7 @@ class BarangController {
             })
         }
 
-        fun getBarangs(jwt: String, callback: (ApiResponse<List<Barang>>?) -> Unit){
-            var barangService : BarangService = ApiClient.getAuthService(BarangService::class.java, jwt)
-
+        fun getBarangs(callback: (ApiResponse<List<Barang>>?) -> Unit){
             barangService.getAll().enqueue(object : Callback<ApiResponse<List<Barang>>> {
                 override fun onResponse(call: Call<ApiResponse<List<Barang>>>, response: Response<ApiResponse<List<Barang>>>): Unit =
                         if (response.isSuccessful) {
@@ -59,9 +57,7 @@ class BarangController {
             })
         }
 
-        fun deleteBarangs(jwt:String, id: Int) {
-            var barangService : BarangService = ApiClient.getAuthService(BarangService::class.java, jwt)
-
+        fun deleteBarangs(id: Int) {
             barangService.delete(id).enqueue(object : Callback<ApiResponse<Barang>>{
                 override fun onResponse(
                         call: Call<ApiResponse<Barang>>,
