@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -96,7 +97,14 @@ fun AddEvent(navController: NavController,context: Context) {
         }
     }
 
-    Scaffold() {  innerPadding ->
+    Scaffold(topBar = {
+        TopAppBar(title = { Text(text = "Tambah Acara") },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.primary,
+            )
+        )
+    }) { innerPadding ->
         Column (
             modifier = Modifier
                 .padding(innerPadding)

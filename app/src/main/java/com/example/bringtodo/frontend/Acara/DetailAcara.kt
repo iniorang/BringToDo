@@ -14,9 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +54,7 @@ class DetailAcara : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailAcara(navController: NavController, id: String?) {
     val (acaraDetails, setAcaraDetails) = remember { mutableStateOf<Acara?>(null) }
@@ -60,42 +65,51 @@ fun DetailAcara(navController: NavController, id: String?) {
         }
     }
 
-    acaraDetails?.let { acara ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(15.dp, 30.dp)
-        ) {
-            Text(fontSize = 30.sp, text = acara.attributes.name)
-            Spacer(modifier = Modifier.height(20.dp))
+    Scaffold(topBar = {
+        TopAppBar(title = { acaraDetails?.attributes?.let { Text(text = it.name) } },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.primary,
+            )
+        )
+    }) { innerPadding ->
+        acaraDetails?.let { acara ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                Text(fontSize = 30.sp, text = acara.attributes.name)
+                Spacer(modifier = Modifier.height(20.dp))
 
-            Text(fontSize = 20.sp, text = "Tanggal Acara")
-            Spacer(modifier = Modifier.height(5.dp))
-            Text(fontSize = 30.sp, text = acara.attributes.date)
-
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(fontSize = 20.sp, text = "Waktu")
-            Spacer(modifier = Modifier.height(5.dp))
-            Text(fontSize = 30.sp, text = acara.attributes.time)
-
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(fontSize = 20.sp, text = "Yang Perlu dibawa")
-            Box {
+                Text(fontSize = 20.sp, text = "Tanggal Acara")
                 Spacer(modifier = Modifier.height(5.dp))
-                Column(
-                    modifier = Modifier
-                        .size(200.dp, 150.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    Text(
-                        text = acara.attributes.bawaan.split(", ")
-                            .joinToString(separator = "\n") { it.trim() }
-                    )
+                Text(fontSize = 30.sp, text = acara.attributes.date)
+
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(fontSize = 20.sp, text = "Waktu")
+                Spacer(modifier = Modifier.height(5.dp))
+                Text(fontSize = 30.sp, text = acara.attributes.time)
+
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(fontSize = 20.sp, text = "Yang Perlu dibawa")
+                Box {
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Column(
+                        modifier = Modifier
+                            .size(200.dp, 150.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            text = acara.attributes.bawaan.split(", ")
+                                .joinToString(separator = "\n") { it.trim() }
+                        )
+                    }
                 }
             }
+        } ?: run {
+            Text(text = "Loading")
         }
-    } ?: run {
-        Text(text = "Loading")
     }
 }
 

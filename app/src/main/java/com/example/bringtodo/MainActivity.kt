@@ -115,61 +115,55 @@ fun Greeting(context: Context) {
     }
 
 
-    val items = listOf(
-        IconForNav(
-            title = "Acara",
-            selectedIcon = Icons.Default.DateRange,
-            unselectedIcon = Icons.Outlined.DateRange,
-            routes = Screen.Acara.route
-        ),
-        IconForNav(
-            title = "Barang",
-            selectedIcon = Icons.Filled.Edit,
-            unselectedIcon = Icons.Outlined.Edit,
-            routes = Screen.Barang.route
-        ),
-    )
-    var selectedItem by rememberSaveable {
-        mutableIntStateOf(0)
-    }
-    var titleCur by remember{ mutableStateOf(items[selectedItem].title) }
+//    val items = listOf(
+//        IconForNav(
+//            title = "Acara",
+//            selectedIcon = Icons.Default.DateRange,
+//            unselectedIcon = Icons.Outlined.DateRange,
+//            routes = Screen.Acara.route
+//        ),
+//        IconForNav(
+//            title = "Barang",
+//            selectedIcon = Icons.Filled.Edit,
+//            unselectedIcon = Icons.Outlined.Edit,
+//            routes = Screen.Barang.route
+//        ),
+//    )
+//    var selectedItem by rememberSaveable {
+//        mutableIntStateOf(0)
+//    }
+//    var titleCur by remember{ mutableStateOf(items[selectedItem].title) }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Scaffold(
-            topBar = {
-                TopAppBar(title = { Text(text = titleCur)})
-            },
-            ) {innerPadding ->
-            NavHost(navController = navController,
-                startDestination = Screen.Auth.route, modifier = Modifier.padding(paddingValues = innerPadding)){
-                composable(Screen.Auth.route){
-                    AuthPage(navController)
-                }
-                composable(Screen.Acara.route){
-                    ListAcara(navController,context)
-                }
-                composable(Screen.Barang.route){
-                    ListBarang(navController)
-                }
-                composable(Screen.TambahBarang.route){
-                    FormTambahBarang(navController)
-                }
-                composable(Screen.AddEvent.route){
-                    AddEvent(navController,context)
-                }
-                composable(Screen.DetailAcara.route + "/{id}") { backStackEntry ->
-                    val arguments = requireNotNull(backStackEntry.arguments)
-                    val id = arguments.getString("id")
-                    DetailAcara(navController, id)
-                }
-                composable(Screen.EditEvent.route + "/{id}") { backStackEntry ->
-                    val arguments = requireNotNull(backStackEntry.arguments)
-                    val id = arguments.getString("id")
-                    EditEvent(navController,id)
-                }
+        NavHost(navController = navController,
+            startDestination = Screen.Auth.route){
+            composable(Screen.Auth.route){
+                AuthPage(navController)
+            }
+            composable(Screen.Acara.route){
+                ListAcara(navController,context)
+            }
+            composable(Screen.Barang.route){
+                ListBarang(navController)
+            }
+            composable(Screen.TambahBarang.route){
+                FormTambahBarang(navController)
+            }
+            composable(Screen.AddEvent.route){
+                AddEvent(navController,context)
+            }
+            composable(Screen.DetailAcara.route + "/{id}") { backStackEntry ->
+                val arguments = requireNotNull(backStackEntry.arguments)
+                val id = arguments.getString("id")
+                DetailAcara(navController, id)
+            }
+            composable(Screen.EditEvent.route + "/{id}") { backStackEntry ->
+                val arguments = requireNotNull(backStackEntry.arguments)
+                val id = arguments.getString("id")
+                EditEvent(navController,id)
             }
         }
     }
