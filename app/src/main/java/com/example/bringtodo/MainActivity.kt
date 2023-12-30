@@ -104,11 +104,11 @@ fun Greeting(context: Context) {
     var password = sharedPreferences.getString("password", "")
     if (!loginComplete.value) {
         if (username != null && password != null){
-//            AuthController.login(username, password, navController, preferencesManager) { success ->
-//                if (success != null) {
-//                    loginComplete.value = true
-//                }
-//            }
+            AuthController.login(username, password, navController, preferencesManager) { success ->
+                if (success != null) {
+                    loginComplete.value = true
+                }
+            }
         } else {
             navController.navigate(Screen.Auth.route)
         }
