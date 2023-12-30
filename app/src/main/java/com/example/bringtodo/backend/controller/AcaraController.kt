@@ -2,6 +2,7 @@ package com.example.bringtodo.backend.controller
 
 import android.content.Context
 import android.util.Log
+import androidx.work.WorkManager
 import com.example.bringtodo.backend.NotifHelper
 import com.example.bringtodo.backend.Service.AcaraBody
 import com.example.bringtodo.backend.Service.AcaraData
@@ -82,28 +83,40 @@ class AcaraController {
             })
         }
 
+        fun deleteWorkManagerJobs(name: String,context: Context) {
+            val workManager = WorkManager.getInstance(context)
+            workManager.cancelAllWorkByTag("acara_$name")
+        }
 
-        fun deleteAcara(id: Int) {
-            acaraService.delete(id).enqueue(object : Callback<ApiResponse<Acara>>{
+
+        fun deleteAcara(id: Int, name: String, context: Context, callback: () -> Unit = {}) {
+            acaraService.delete(id).enqueue(object : Callback<ApiResponse<Acara>> {
                 override fun onResponse(
                     call: Call<ApiResponse<Acara>>,
-                    response: Response<ApiResponse<Acara>>): Unit =
+                    response: Response<ApiResponse<Acara>>
+                ) {
                     if (response.isSuccessful) {
                         println(response.body())
+                        deleteWorkManagerJobs(name, context)
+                        callback.invoke() // Panggil callback setelah penghapusan berhasil
                     } else {
-//                        println("Empty")
+                        // Handle respons yang tidak berhasil
+                        println("HTTP Request Failed: ${response.code()} - ${response.message()}")
                     }
+                }
 
                 override fun onFailure(
                     call: Call<ApiResponse<Acara>>,
                     t: Throwable
                 ) {
-                    print(t.message)
+                    // Handle kegagalan koneksi atau respons
+                    println("HTTP Request Failure: ${t.message}")
                 }
             })
         }
 
-        fun updateAcara(id: String?, studioname: String,desc: String,date: String,waktu: String, barangForms: List<String>,callback: (Acara?) -> Unit){
+
+        fun updateAcara(id: String?,old : String, studioname: String,desc: String,date: String,waktu: String, barangForms: List<String>,context: Context,callback: (Acara?) -> Unit){
             val bawaan = barangForms.joinToString(", ")
             val AcaraData = AcaraData(AcaraBody(name = studioname, "", date, waktu, bawaan))
             acaraService.update(id,AcaraData).enqueue(object : Callback<Acara>{
@@ -116,7 +129,8 @@ class AcaraController {
                         if (acara != null) {
                             val dateTimeMillis = NotifHelper.convertDateTimeToMillis(date, waktu)
                             println("Converted DateTimeMillis: $dateTimeMillis")
-//                            NotifHelper.notifHelper(context, dateTimeMillis, studioname)
+                            deleteWorkManagerJobs(old, context)
+                            NotifHelper.notifHelper(context, dateTimeMillis, studioname)
                         }else{
 //                            Todo
                         }

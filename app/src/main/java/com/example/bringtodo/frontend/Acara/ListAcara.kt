@@ -1,8 +1,10 @@
 package com.example.bringtodo.frontend.Acara
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextThemeWrapper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -44,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.example.bringtodo.R
 import com.example.bringtodo.Screen
 import com.example.bringtodo.backend.controller.AcaraController
 import com.example.bringtodo.backend.model.Acara
@@ -141,7 +144,8 @@ fun CardEvent(acara:Acara, navController: NavController,context: Context){
                     navController.navigate("${Screen.EditEvent.route}/${acara.id}")
                     expanded = false })
                 DropdownMenuItem(text = { Text(text = "Delete") }, onClick = {
-                    AcaraController.deleteAcara(acara.id)
+//                    AcaraController.deleteAcara(acara.id,acara.attributes.name,context)
+                    DeleteConfirmation(context, acara.id, acara.attributes.name)
                     navController.navigate(Screen.Acara.route)
                     expanded = false })
             }
@@ -151,6 +155,25 @@ fun CardEvent(acara:Acara, navController: NavController,context: Context){
     }
 }
 
+fun DeleteConfirmation(context: Context,id:Int,name: String){
+    val alertDialogBuilder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.Theme_BringToDo))
+
+    alertDialogBuilder.setTitle("Konfirmasi Hapus")
+    alertDialogBuilder.setMessage("Apakah Anda yakin ingin menghapus acara '$name'?")
+
+    alertDialogBuilder.setPositiveButton("Ya") { dialog, _ ->
+        AcaraController.deleteAcara(id, name, context)
+
+        dialog.dismiss()
+    }
+
+    alertDialogBuilder.setNegativeButton("Batal") { dialog, _ ->
+        dialog.dismiss()
+    }
+
+    val alertDialog = alertDialogBuilder.create()
+    alertDialog.show()
+}
 @Preview(showBackground = false)
 @Composable
 fun GreetingPreview3() {

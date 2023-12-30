@@ -77,6 +77,7 @@ fun EditEvent(navController: NavController,id : String?) {
     var barangForms by remember { mutableStateOf(listOf("")) }
     val context = LocalContext.current
     val (acaraDetails, setAcaraDetails) = remember { mutableStateOf<Acara?>(null) }
+    var oldName by remember {mutableStateOf("")}
 
     LaunchedEffect(key1 = id) {
         AcaraController.getAcaraById(id) { response ->
@@ -105,6 +106,7 @@ fun EditEvent(navController: NavController,id : String?) {
                     addNameEvent = acara.attributes.name
                     barangForms = acara.attributes.bawaan.split(",").map { it.trim() }
                         .filter { it.isNotBlank() }.toMutableList()
+                    oldName = acara.attributes.name
                 }
             }
         }
@@ -197,7 +199,7 @@ fun EditEvent(navController: NavController,id : String?) {
                     .padding(0.dp, 30.dp)
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    AcaraController.updateAcara(id,addNameEvent,"",selectedDate,"$timeEvent:00.000",barangForms){
+                    AcaraController.updateAcara(id,oldName,addNameEvent,"",selectedDate,"$timeEvent:00.000",barangForms,context){
                             acara ->  if (acara != null) {
                         navController.navigate(Screen.Acara.route)
                     }

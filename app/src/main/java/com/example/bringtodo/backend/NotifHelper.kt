@@ -44,6 +44,7 @@ object NotifHelper {
                         notificationTimeMillis - currentTimeMillis,
                         TimeUnit.MILLISECONDS
                     )
+                    .addTag("acara_$name")
                     .build()
 
             workManager.enqueue(notificationRequest)
