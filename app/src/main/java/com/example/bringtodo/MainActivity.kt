@@ -53,6 +53,8 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import android.Manifest
 import androidx.compose.foundation.layout.Column
+import com.example.bringtodo.backend.controller.AuthController
+import com.example.bringtodo.frontend.AuthPage
 
 data class IconForNav(
     val title : String,
@@ -62,6 +64,7 @@ data class IconForNav(
 )
 
 sealed class Screen(val route: String){
+    object Auth : Screen("Auth")
     object Acara : Screen("ListAcara")
     object Barang : Screen("ListBarang")
     object TambahBarang : Screen("TambahBarang")
@@ -96,6 +99,21 @@ fun Greeting(context: Context) {
     val navController = rememberNavController()
     val preferencesManager = PreferencesManager(context = LocalContext.current)
     val sharedPreferences: SharedPreferences = LocalContext.current.getSharedPreferences("auth", Context.MODE_PRIVATE)
+    val loginComplete = remember { mutableStateOf(false) }
+    var username = sharedPreferences.getString("username", "")
+    var password = sharedPreferences.getString("password", "")
+    if (!loginComplete.value) {
+        if (username != null && password != null){
+//            AuthController.login(username, password, navController, preferencesManager) { success ->
+//                if (success != null) {
+//                    loginComplete.value = true
+//                }
+//            }
+        } else {
+            navController.navigate(Screen.Auth.route)
+        }
+    }
+
 
     val items = listOf(
         IconForNav(
@@ -126,7 +144,10 @@ fun Greeting(context: Context) {
             },
             ) {innerPadding ->
             NavHost(navController = navController,
-                startDestination = Screen.Acara.route, modifier = Modifier.padding(paddingValues = innerPadding)){
+                startDestination = Screen.Auth.route, modifier = Modifier.padding(paddingValues = innerPadding)){
+                composable(Screen.Auth.route){
+                    AuthPage(navController)
+                }
                 composable(Screen.Acara.route){
                     ListAcara(navController,context)
                 }
