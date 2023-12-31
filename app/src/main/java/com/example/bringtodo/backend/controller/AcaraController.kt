@@ -1,7 +1,6 @@
 package com.example.bringtodo.backend.controller
 
 import android.content.Context
-import android.util.Log
 import androidx.work.WorkManager
 import com.example.bringtodo.backend.NotifHelper
 import com.example.bringtodo.backend.Service.AcaraBody
@@ -16,7 +15,6 @@ import retrofit2.Callback
 class AcaraController {
     companion object{
         private var acaraService : AcaraService = ApiClient.getService(AcaraService::class.java)
-
         fun insertAcara(studioname: String, date: String, waktu:String, barangForms: List<String>, context: Context,  callback: (Acara?) -> Unit) {
             val bawaan = barangForms.joinToString(", ")
             val AcaraData = AcaraData(AcaraBody(name = studioname, "", date, waktu, bawaan))
@@ -30,7 +28,9 @@ class AcaraController {
                         if (acara != null) {
                             val dateTimeMillis = NotifHelper.convertDateTimeToMillis(date, waktu)
                             println("Converted DateTimeMillis: $dateTimeMillis")
-                            NotifHelper.notifHelper(context, dateTimeMillis, studioname)
+                            NotifHelper.notifAcara1hari(context, dateTimeMillis, studioname, bawaan)
+                            NotifHelper.notifAcara15menit(context, dateTimeMillis, studioname, bawaan)
+                            NotifHelper.notifAcara1Jam(context, dateTimeMillis, studioname, bawaan)
                         }else{
 //                            Todo
                         }
@@ -88,7 +88,6 @@ class AcaraController {
             workManager.cancelAllWorkByTag("acara_$name")
         }
 
-
         fun deleteAcara(id: Int, name: String, context: Context, callback: () -> Unit = {}) {
             acaraService.delete(id).enqueue(object : Callback<ApiResponse<Acara>> {
                 override fun onResponse(
@@ -98,7 +97,7 @@ class AcaraController {
                     if (response.isSuccessful) {
                         println(response.body())
                         deleteWorkManagerJobs(name, context)
-                        callback.invoke() // Panggil callback setelah penghapusan berhasil
+                        callback.invoke()
                     } else {
                         // Handle respons yang tidak berhasil
                         println("HTTP Request Failed: ${response.code()} - ${response.message()}")
@@ -130,7 +129,9 @@ class AcaraController {
                             val dateTimeMillis = NotifHelper.convertDateTimeToMillis(date, waktu)
                             println("Converted DateTimeMillis: $dateTimeMillis")
                             deleteWorkManagerJobs(old, context)
-                            NotifHelper.notifHelper(context, dateTimeMillis, studioname)
+                            NotifHelper.notifAcara1hari(context, dateTimeMillis, studioname,bawaan)
+                            NotifHelper.notifAcara15menit(context, dateTimeMillis, studioname, bawaan)
+                            NotifHelper.notifAcara1Jam(context, dateTimeMillis, studioname, bawaan)
                         }else{
 //                            Todo
                         }

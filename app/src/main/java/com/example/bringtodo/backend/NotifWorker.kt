@@ -15,13 +15,17 @@ class NotifWorker(context: Context, params: WorkerParameters) : Worker(context, 
     override fun doWork(): Result {
         Log.d("Work Success", "Do work: Success")
         val name = inputData.getString("acaraName")
+        val bawaan = inputData.getString("bawaan")?.split(", ")?.joinToString(separator = "\n") { it.trim() }
         if (name != null) {
-            showNotif(name)
+            showNotifAcara(name,bawaan)
+        }
+        if (!bawaan.isNullOrEmpty()) {
+//            showNotifBarang(name, bawaan)
         }
         return Result.success()
     }
 
-    private fun showNotif(name: String?) {
+    private fun showNotifAcara(nama :String,bawaan: String?) {
         val notificationManager =
             applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId = "Acara_Channel"
@@ -37,11 +41,12 @@ class NotifWorker(context: Context, params: WorkerParameters) : Worker(context, 
         }
 
         val notification = NotificationCompat.Builder(applicationContext, channelId)
-            .setContentTitle("Acara: $name")
-            .setContentText("Acara akan segera dimulai!")
+            .setContentTitle("$nama akan dimulai")
+            .setContentText("Jangan Lupa siapkan dan bawa : \n$bawaan")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
+            .setStyle(NotificationCompat.BigTextStyle())
             .build()
 
         notificationManager.notify(notificationId, notification)

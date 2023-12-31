@@ -173,7 +173,6 @@ fun DeleteConfirmation(context: Context,id:Int,name: String){
 
     alertDialogBuilder.setPositiveButton("Ya") { dialog, _ ->
         AcaraController.deleteAcara(id, name, context)
-
         dialog.dismiss()
     }
 
