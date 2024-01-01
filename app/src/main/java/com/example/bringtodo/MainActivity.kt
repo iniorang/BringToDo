@@ -114,32 +114,12 @@ fun Greeting(context: Context) {
         }
     }
 
-
-//    val items = listOf(
-//        IconForNav(
-//            title = "Acara",
-//            selectedIcon = Icons.Default.DateRange,
-//            unselectedIcon = Icons.Outlined.DateRange,
-//            routes = Screen.Acara.route
-//        ),
-//        IconForNav(
-//            title = "Barang",
-//            selectedIcon = Icons.Filled.Edit,
-//            unselectedIcon = Icons.Outlined.Edit,
-//            routes = Screen.Barang.route
-//        ),
-//    )
-//    var selectedItem by rememberSaveable {
-//        mutableIntStateOf(0)
-//    }
-//    var titleCur by remember{ mutableStateOf(items[selectedItem].title) }
-
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         NavHost(navController = navController,
-            startDestination = Screen.Auth.route){
+            startDestination = if (loginComplete.value) Screen.Acara.route else Screen.Auth.route){
             composable(Screen.Auth.route){
                 AuthPage(navController)
             }

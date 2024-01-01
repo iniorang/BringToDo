@@ -15,6 +15,11 @@ import retrofit2.Callback
 class AcaraController {
     companion object{
         private var acaraService : AcaraService = ApiClient.getService(AcaraService::class.java)
+        fun createnotif(context: Context,date: Long,name: String,item:String){
+            NotifHelper.notifAcara(context, date,0, name, item)
+            NotifHelper.notifAcara(context, date,24 * 60 * 60 * 1000, name, item)
+            NotifHelper.notifAcara(context, date,60 * 30 * 60 * 1000, name, item)
+        }
         fun insertAcara(studioname: String, date: String, waktu:String, barangForms: List<String>, context: Context,  callback: (Acara?) -> Unit) {
             val bawaan = barangForms.joinToString(", ")
             val AcaraData = AcaraData(AcaraBody(name = studioname, "", date, waktu, bawaan))
@@ -28,9 +33,10 @@ class AcaraController {
                         if (acara != null) {
                             val dateTimeMillis = NotifHelper.convertDateTimeToMillis(date, waktu)
                             println("Converted DateTimeMillis: $dateTimeMillis")
-                            NotifHelper.notifAcara1hari(context, dateTimeMillis, studioname, bawaan)
-                            NotifHelper.notifAcara15menit(context, dateTimeMillis, studioname, bawaan)
-                            NotifHelper.notifAcara1Jam(context, dateTimeMillis, studioname, bawaan)
+//                            NotifHelper.notifAcara1hari(context, dateTimeMillis, studioname, bawaan)
+//                            NotifHelper.notifAcara15menit(context, dateTimeMillis, studioname, bawaan)
+//                            NotifHelper.notifAcara1Jam(context, dateTimeMillis, studioname, bawaan)
+                            createnotif(context,dateTimeMillis,studioname,bawaan)
                         }else{
 //                            Todo
                         }
@@ -129,9 +135,10 @@ class AcaraController {
                             val dateTimeMillis = NotifHelper.convertDateTimeToMillis(date, waktu)
                             println("Converted DateTimeMillis: $dateTimeMillis")
                             deleteWorkManagerJobs(old, context)
-                            NotifHelper.notifAcara1hari(context, dateTimeMillis, studioname,bawaan)
-                            NotifHelper.notifAcara15menit(context, dateTimeMillis, studioname, bawaan)
-                            NotifHelper.notifAcara1Jam(context, dateTimeMillis, studioname, bawaan)
+//                            NotifHelper.notifAcara1hari(context, dateTimeMillis, studioname,bawaan)
+//                            NotifHelper.notifAcara15menit(context, dateTimeMillis, studioname, bawaan)
+//                            NotifHelper.notifAcara1Jam(context, dateTimeMillis, studioname, bawaan)
+                            createnotif(context, dateTimeMillis, studioname, bawaan)
                         }else{
 //                            Todo
                         }

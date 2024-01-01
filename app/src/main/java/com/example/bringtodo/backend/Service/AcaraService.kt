@@ -31,7 +31,7 @@ interface AcaraService {
     @POST("acaras")
     fun insert(@Body body: AcaraData): Call<Acara>
 
-    @GET("acaras")
+    @GET("acaras?sort[0]=createdAt:desc")
     fun getall() : Call<ApiResponse<List<Acara>>>
 
     @GET("acaras/{id}")

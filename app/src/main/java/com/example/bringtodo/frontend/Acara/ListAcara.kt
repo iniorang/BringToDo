@@ -85,7 +85,7 @@ fun ListAcara(navController: NavController, context: Context) {
                       ))
     },floatingActionButton = { FloatingActionButton(onClick = { navController.navigate(Screen.AddEvent.route){
         popUpTo(navController.graph.findStartDestination().id) {
-            saveState = true
+            saveState = false
         }
         launchSingleTop = true
         restoreState = true
@@ -127,7 +127,7 @@ fun CardEvent(acara:Acara, navController: NavController,context: Context){
                     popUpTo(navController.graph.findStartDestination().id) {
                         saveState = true
                     }
-                    launchSingleTop = false
+                    launchSingleTop = true
                     restoreState = true
                 }
             }, onLongClick = {
@@ -173,6 +173,7 @@ fun DeleteConfirmation(context: Context,id:Int,name: String){
 
     alertDialogBuilder.setPositiveButton("Ya") { dialog, _ ->
         AcaraController.deleteAcara(id, name, context)
+
         dialog.dismiss()
     }
 

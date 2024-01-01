@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -82,6 +83,7 @@ fun AddEvent(navController: NavController,context: Context) {
     var eventDesc by remember { mutableStateOf("") }
     var isDatePickerVisible by remember { mutableStateOf(false) }
     var isTimePickerVisible by remember { mutableStateOf(false) }
+    var isBarangRemembered by remember { mutableStateOf(false) }
     var barangForms by remember { mutableStateOf(listOf("")) }
     val context = LocalContext.current
 
@@ -154,7 +156,6 @@ fun AddEvent(navController: NavController,context: Context) {
                     value = addNameEvent,
                     onValueChange = {newValue ->
                         addNameEvent = newValue
-
                     })
             }
             Column(
@@ -170,10 +171,9 @@ fun AddEvent(navController: NavController,context: Context) {
                                 it[index] = newValue
                             }
                         },
-                        onRemoveClicked = { removeBarangForm(index) }
+                        onRemoveClicked = { removeBarangForm(index) },
                     )
                 }
-
                 Button(
                     onClick = { addBarangForm() },
                     modifier = Modifier
@@ -207,7 +207,7 @@ fun AddEvent(navController: NavController,context: Context) {
                     text = {
                         DatePickerCompose { date ->
                             selectedDate = date
-                            isDatePickerVisible = false // Hide the date picker after selection if needed
+                            isDatePickerVisible = false
                         }
                     },
                     confirmButton = {
@@ -250,23 +250,26 @@ fun AddEvent(navController: NavController,context: Context) {
 
 @Composable
 fun BarangFormInput(barangForm: String, onValueChange: (String) -> Unit, onRemoveClicked: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    ) {
-        TextField(
-            value = barangForm,
-            onValueChange = { newValue ->
-                onValueChange(newValue)
-            },
-            label = { Text("Nama Barang") },
+    var showDateTime by remember { mutableStateOf(false) }
+    Column {
+        Row(
             modifier = Modifier
-                .padding(bottom = 8.dp)
-        )
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            TextField(
+                value = barangForm,
+                onValueChange = { newValue ->
+                    onValueChange(newValue)
+                },
+                label = { Text("Nama Barang") },
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+            )
             IconButton(onClick = onRemoveClicked) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = "Hapus Barang")
             }
+        }
     }
 }
 
