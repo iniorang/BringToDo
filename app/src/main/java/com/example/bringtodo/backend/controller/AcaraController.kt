@@ -9,8 +9,8 @@ import com.example.bringtodo.backend.Service.AcaraService
 import com.example.bringtodo.backend.model.Acara
 import com.example.bringtodo.backend.model.ApiResponse
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.Callback
+import retrofit2.Response
 
 class AcaraController {
     companion object{

@@ -55,7 +55,6 @@ fun AuthPage(navController: NavController, modifier: Modifier = Modifier, contex
     var passwordVisibility by remember { mutableStateOf(false) }
     var isLogin by remember { mutableStateOf(true) }
 
-
     Scaffold (
         topBar = {
             TopAppBar(
