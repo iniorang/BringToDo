@@ -26,6 +26,9 @@
     },
     "bawaan": {
       "type": "text"
+    },
+    "terlaksnakan": {
+      "type": "boolean"
     }
   }
 }

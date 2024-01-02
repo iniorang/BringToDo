@@ -120,7 +120,6 @@ class AcaraController {
             })
         }
 
-
         fun updateAcara(id: String?,old : String, studioname: String,desc: String,date: String,waktu: String, barangForms: List<String>,context: Context,callback: (Acara?) -> Unit){
             val bawaan = barangForms.joinToString(", ")
             val AcaraData = AcaraData(AcaraBody(name = studioname, "", date, waktu, bawaan))

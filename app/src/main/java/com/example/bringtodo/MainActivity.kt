@@ -112,7 +112,7 @@ fun Greeting(context: Context) {
             composable(Screen.DetailAcara.route + "/{id}") { backStackEntry ->
                 val arguments = requireNotNull(backStackEntry.arguments)
                 val id = arguments.getString("id")
-                DetailAcara(navController, id)
+                DetailAcara(navController, id,context)
             }
             composable(Screen.EditEvent.route + "/{id}") { backStackEntry ->
                 val arguments = requireNotNull(backStackEntry.arguments)

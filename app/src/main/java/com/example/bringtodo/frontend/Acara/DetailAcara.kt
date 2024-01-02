@@ -1,8 +1,10 @@
 package com.example.bringtodo.frontend.Acara
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +16,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,8 +32,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,7 +65,7 @@ class DetailAcara : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailAcara(navController: NavController, id: String?) {
+fun DetailAcara(navController: NavController, id: String?,context: Context) {
     val (acaraDetails, setAcaraDetails) = remember { mutableStateOf<Acara?>(null) }
 
     LaunchedEffect(key1 = id) {
@@ -67,7 +75,7 @@ fun DetailAcara(navController: NavController, id: String?) {
     }
 
     Scaffold(topBar = {
-        CenterAlignedTopAppBar(title = { acaraDetails?.attributes?.let { Text(text = it.name) } },
+        TopAppBar(title = { acaraDetails?.attributes?.let { Text(text = it.name) } },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 titleContentColor = MaterialTheme.colorScheme.primary,
@@ -75,10 +83,31 @@ fun DetailAcara(navController: NavController, id: String?) {
                 IconButton(onClick = { navController.navigate(Screen.Acara.route) }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Localized description"
+                        contentDescription = "Kembali ke daftar"
                     )
                 }
-            },
+            }, actions = {
+                var expanded by remember { mutableStateOf(false) }
+                IconButton(onClick = { expanded = true }) {
+                    Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "Tampilkan Dropdown")
+                }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background)
+                ) {
+                    acaraDetails?.let { acara ->
+                        DropdownMenuItem(text = { Text(text = "Edit") }, onClick = {
+                            navController.navigate("${Screen.EditEvent.route}/${acara.id}")
+                            expanded = false
+                        })
+                        DropdownMenuItem(text = { Text(text = "Delete") }, onClick = {
+                            DeleteConfirmation(navController,context, acara.id, acara.attributes.name)
+                            expanded = false
+                        })
+                    }
+                }
+            }
         )
     }) { innerPadding ->
         acaraDetails?.let { acara ->

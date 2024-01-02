@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,6 +61,7 @@ import com.example.bringtodo.PreferencesManager
 import com.example.bringtodo.R
 import com.example.bringtodo.Screen
 import com.example.bringtodo.backend.controller.AcaraController
+import com.example.bringtodo.backend.controller.AcaraController.Companion.deleteWorkManagerJobs
 import com.example.bringtodo.backend.model.Acara
 import com.example.bringtodo.ui.theme.BringToDoTheme
 
@@ -84,19 +86,19 @@ class ListAcara : ComponentActivity() {
 @Composable
 fun ListAcara(navController: NavController, context: Context) {
     var acaras by remember { mutableStateOf<List<Acara>?>(null) }
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+//    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val preferencesManager = remember { PreferencesManager(context = context) }
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+//        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            MediumTopAppBar(
+            TopAppBar(
                 colors = topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
                     Text(
-                        "BringToDo\n",
+                        "BringToDo",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -109,9 +111,13 @@ fun ListAcara(navController: NavController, context: Context) {
                         )
                     }
                 },
-                scrollBehavior = scrollBehavior
+//                scrollBehavior = scrollBehavior
             )
-        },
+        },floatingActionButton = {
+            FloatingActionButton(onClick = { navController.navigate(Screen.AddEvent.route) }) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
+            }
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -182,7 +188,7 @@ fun CardEvent(acara: Acara, navController: NavController, context: Context) {
                 })
                 DropdownMenuItem(text = { Text(text = "Delete") }, onClick = {
 //                    AcaraController.deleteAcara(acara.id,acara.attributes.name,context)
-                    DeleteConfirmation(context, acara.id, acara.attributes.name)
+                    DeleteConfirmation(navController,context, acara.id, acara.attributes.name)
                     navController.navigate(Screen.Acara.route)
                     expanded = false
                 })
@@ -193,14 +199,17 @@ fun CardEvent(acara: Acara, navController: NavController, context: Context) {
     }
 }
 
-fun DeleteConfirmation(context: Context, id: Int, name: String) {
+fun DeleteConfirmation(navController: NavController,context: Context, id: Int, name: String) {
     val alertDialogBuilder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.Theme_BringToDo))
 
     alertDialogBuilder.setTitle("Konfirmasi Hapus")
     alertDialogBuilder.setMessage("Apakah Anda yakin ingin menghapus acara '$name'?")
 
     alertDialogBuilder.setPositiveButton("Ya") { dialog, _ ->
-        AcaraController.deleteAcara(id, name, context)
+        AcaraController.deleteAcara(id, name, context){
+            dialog.dismiss()
+            navController.navigate(Screen.Acara.route)
+        }
         dialog.dismiss()
     }
 
@@ -218,7 +227,7 @@ fun LogoutConfirmation(navController: NavController,context: Context, preference
         AlertDialog.Builder(ContextThemeWrapper(context, R.style.Theme_BringToDo))
 
     alertDialogBuilder.setTitle("Konfirmasi Log-out")
-    alertDialogBuilder.setMessage("Apakah Anda yakin ingin Logut?")
+    alertDialogBuilder.setMessage("Apakah Anda yakin ingin untuk keluar?")
 
     alertDialogBuilder.setPositiveButton("Ya") { dialog, _ ->
         preferencesManager.saveData("jwt","")
