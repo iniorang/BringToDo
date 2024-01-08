@@ -694,7 +694,6 @@ export interface ApiAcaraAcara extends Schema.CollectionType {
     date: Attribute.Date;
     time: Attribute.Time;
     bawaan: Attribute.Text;
-    terlaksnakan: Attribute.Boolean;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

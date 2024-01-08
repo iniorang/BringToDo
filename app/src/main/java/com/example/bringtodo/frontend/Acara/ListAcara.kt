@@ -24,6 +24,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -182,16 +184,34 @@ fun CardEvent(acara: Acara, navController: NavController, context: Context) {
                 onDismissRequest = { expanded = false },
                 modifier = Modifier.background(MaterialTheme.colorScheme.background)
             ) {
-                DropdownMenuItem(text = { Text(text = "Edit") }, onClick = {
+                DropdownMenuItem(
+                    text = { Text(text = "Edit") },
+                    onClick = {
                     navController.navigate("${Screen.EditEvent.route}/${acara.id}")
                     expanded = false
-                })
-                DropdownMenuItem(text = { Text(text = "Delete") }, onClick = {
-//                    AcaraController.deleteAcara(acara.id,acara.attributes.name,context)
-                    DeleteConfirmation(navController,context, acara.id, acara.attributes.name)
-                    navController.navigate(Screen.Acara.route)
-                    expanded = false
-                })
+                    },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Outlined.Edit,
+                            contentDescription = null
+                        )
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "Delete") },
+                    onClick = {
+    //                    AcaraController.deleteAcara(acara.id,acara.attributes.name,context)
+                        DeleteConfirmation(navController,context, acara.id, acara.attributes.name)
+                        navController.navigate(Screen.Acara.route)
+                        expanded = false
+                     },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Outlined.Delete,
+                            contentDescription = null
+                        )
+                    }
+                )
             }
 
         }
