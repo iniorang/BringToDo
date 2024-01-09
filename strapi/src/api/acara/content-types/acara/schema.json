@@ -15,8 +15,8 @@
     "name": {
       "type": "string"
     },
-    "desc": {
-      "type": "text"
+    "pembuat": {
+      "type": "string"
     },
     "date": {
       "type": "date"

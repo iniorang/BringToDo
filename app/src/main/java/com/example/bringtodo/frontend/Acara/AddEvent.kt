@@ -53,6 +53,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.example.bringtodo.PreferencesManager
 import com.example.bringtodo.Screen
 import com.example.bringtodo.backend.controller.AcaraController
 import com.example.bringtodo.ui.theme.BringToDoTheme
@@ -89,6 +90,7 @@ fun AddEvent(navController: NavController,context: Context) {
     var isTimePickerVisible by remember { mutableStateOf(false) }
     var isBarangRemembered by remember { mutableStateOf(false) }
     var barangForms by remember { mutableStateOf(listOf("")) }
+    val preferencesManager = remember { PreferencesManager(context = context) }
     val context = LocalContext.current
 
     fun addBarangForm() {
@@ -212,7 +214,7 @@ fun AddEvent(navController: NavController,context: Context) {
                     .fillMaxWidth(),
 
                 onClick = {
-                    AcaraController.insertAcara(addNameEvent,selectedDate,"$timeEvent:00.000",barangForms,context){
+                    AcaraController.insertAcara(addNameEvent,selectedDate,"$timeEvent:00.000",barangForms,preferencesManager,context){
                             acara ->  if (acara != null) {
                         navController.navigate(Screen.Acara.route)
                     }}

@@ -127,7 +127,7 @@ fun ListAcara(navController: NavController, context: Context) {
                 .padding(0.dp, 10.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
-            AcaraController.getAcaras { response ->
+            AcaraController.getAcaras(preferencesManager) { response ->
                 acaras = response?.data
             }
             LazyColumn {

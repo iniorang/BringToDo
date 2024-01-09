@@ -13,8 +13,8 @@ class Acara {
 class AcaraAttributes{
     @SerializedName("name")
     var name : String = ""
-    @SerializedName("desc")
-    var desc : String = ""
+    @SerializedName("pembuat")
+    var pembuat : String = ""
     @SerializedName("date")
     var date : String = ""
     @SerializedName("time")

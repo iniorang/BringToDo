@@ -690,7 +690,7 @@ export interface ApiAcaraAcara extends Schema.CollectionType {
   };
   attributes: {
     name: Attribute.String;
-    desc: Attribute.Text;
+    pembuat: Attribute.String;
     date: Attribute.Date;
     time: Attribute.Time;
     bawaan: Attribute.Text;

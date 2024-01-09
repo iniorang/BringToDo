@@ -10,6 +10,8 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 data class AcaraData(
     @SerializedName("data")
@@ -18,8 +20,8 @@ data class AcaraData(
 
 data class AcaraBody(
     val name: String,
-    @SerializedName("desc")
-    val desc: String,
+    @SerializedName("pembuat")
+    val pembuat: String,
     @SerializedName("date")
     val date: String,
     @SerializedName("time")
@@ -31,8 +33,8 @@ interface AcaraService {
     @POST("acaras")
     fun insert(@Body body: AcaraData): Call<Acara>
 
-    @GET("acaras?sort[0]=createdAt:desc")
-    fun getall() : Call<ApiResponse<List<Acara>>>
+    @GET("acaras")
+    fun getall(@Query("sort")sort: String,@QueryMap filters: Map<String, String>) : Call<ApiResponse<List<Acara>>>
 
     @GET("acaras/{id}")
     fun getOneAcara(@Path("id")id: String?) : Call<ApiResponse<Acara>>
