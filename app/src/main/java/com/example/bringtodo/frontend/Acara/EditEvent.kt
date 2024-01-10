@@ -11,19 +11,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -39,6 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.example.bringtodo.PreferencesManager
 import com.example.bringtodo.Screen
 import com.example.bringtodo.backend.controller.AcaraController
 import com.example.bringtodo.backend.controller.AcaraController.Companion.getAcaraById
@@ -78,6 +84,7 @@ fun EditEvent(navController: NavController,id : String?) {
     var isTimePickerVisible by remember { mutableStateOf(false) }
     var barangForms by remember { mutableStateOf(listOf("")) }
     val context = LocalContext.current
+    val preferencesManager = remember { PreferencesManager(context = context) }
     val (acaraDetails, setAcaraDetails) = remember { mutableStateOf<Acara?>(null) }
     var oldName by remember {mutableStateOf("")}
 
@@ -128,7 +135,7 @@ fun EditEvent(navController: NavController,id : String?) {
                 }
             }
         )
-    }) {  innerPadding ->
+    }) { innerPadding ->
         Column (
             modifier = Modifier
                 .padding(innerPadding)
@@ -138,102 +145,110 @@ fun EditEvent(navController: NavController,id : String?) {
                 modifier = Modifier
                     .padding(30.dp,10.dp,30.dp,0.dp),
             ){
-                Text(text = "Select Date")
-                Row(verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.End){
-                    TextField(
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ){
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .weight(1f),
                         value = selectedDate,
                         onValueChange = { newValue ->
                             selectedDate = newValue
                         },
-
-                        )
+                        label = { Text("Select Date") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = null
+                            )
+                        }
+                    )
                     Button(
                         onClick = {isDatePickerVisible = true},
+                        shape = RoundedCornerShape(15.dp),
+                        modifier = Modifier.padding(10.dp,0.dp,0.dp,0.dp)
                     ) {
                         Text("Date")
                     }
                 }
-            }
-            Column(modifier = Modifier.padding(30.dp, 10.dp, 30.dp, 0.dp)) {
-                Text(text = "Select Time")
+
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                    TextField(
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .weight(1f),
                         value = timeEvent,
                         onValueChange = { newValue ->
                             timeEvent = newValue
                         },
+                        label = { Text("Select Time") }
                     )
                     IconButton(onClick = { isTimePickerVisible = true }) {
                         Icon(imageVector = Icons.Default.AddCircle, contentDescription = "Pilih Waktu", modifier = Modifier.size(30.dp))
                     }
                 }
-            }
-            Column(
-                modifier = Modifier.padding(30.dp,10.dp,30.dp,0.dp)
-            ){
-                Text(
-                    text = "Nama Event"
-                )
-                TextField(
+
+                OutlinedTextField(
                     value = addNameEvent,
                     onValueChange = {newValue ->
                         addNameEvent = newValue
+                    },
+                    label = { Text("Event Name") },
 
-                    })
-            }
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
+                    )
+                Text(modifier = Modifier.padding(5.dp,20.dp,0.dp,0.dp), text = "Tambah Barang")
                 barangForms.forEachIndexed { index, barangForm ->
                     BarangFormInput(
-//                        index = index,
                         barangForm = barangForm,
                         onValueChange = { newValue ->
-                            barangForms = barangForms.toMutableList().apply {
-                                this[index] = newValue
+                            barangForms = barangForms.toMutableList().also {
+                                it[index] = newValue
                             }
                         },
-                        onRemoveClicked = {
-                            removeBarangForm(index)
-                        }
+                        onRemoveClicked = { removeBarangForm(index) },
                     )
                 }
-                Button(
+                TextButton(
                     onClick = { addBarangForm() },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
+                        .padding(vertical = 8.dp),
+
+                    ) {
+                    Icon(
+                        imageVector  = Icons.Default.AddCircle,
+                        contentDescription = null
+                    )
                     Text("Tambah Barang")
                 }
             }
-
-
             Button(
                 modifier = Modifier
-                    .padding(0.dp, 30.dp)
-                    .align(Alignment.CenterHorizontally),
+                    .padding(30.dp, 30.dp,30.dp,0.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth(),
+
                 onClick = {
-                    AcaraController.updateAcara(id,oldName,addNameEvent,"",selectedDate,"$timeEvent:00.000",barangForms,context){
+                    AcaraController.updateAcara(id,oldName,addNameEvent,selectedDate,"$timeEvent:00.000",barangForms,preferencesManager,context){
                             acara ->  if (acara != null) {
                         navController.navigate(Screen.Acara.route)
-                    }
-                    }
+                    }}
                 },
             ) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = null
+                )
                 Text("Save")
             }
 
             if (isDatePickerVisible) {
                 AlertDialog(
                     onDismissRequest = { isDatePickerVisible = false },
-                    title = { Text("Select Date") },
                     text = {
                         DatePickerCompose { date ->
                             selectedDate = date
-                            isDatePickerVisible = false // Hide the date picker after selection if needed
+                            isDatePickerVisible = false
                         }
                     },
                     confirmButton = {

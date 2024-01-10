@@ -138,9 +138,10 @@ class AcaraController {
             })
         }
 
-        fun updateAcara(id: String?,old : String, studioname: String,desc: String,date: String,waktu: String, barangForms: List<String>,context: Context,callback: (Acara?) -> Unit){
+        fun updateAcara(id: String?,old : String, studioname: String,date: String,waktu: String, barangForms: List<String>,prefman: PreferencesManager,context: Context,callback: (Acara?) -> Unit){
             val bawaan = barangForms.joinToString(", ")
-            val AcaraData = AcaraData(AcaraBody(name = studioname, "", date, waktu, bawaan))
+            val pembuat = prefman.getData("username")
+            val AcaraData = AcaraData(AcaraBody(studioname, pembuat, date, waktu, bawaan))
             acaraService.update(id,AcaraData).enqueue(object : Callback<Acara>{
                 override fun onResponse(call: Call<Acara>, response: Response<Acara>): Unit =
                     if (response.isSuccessful) {
