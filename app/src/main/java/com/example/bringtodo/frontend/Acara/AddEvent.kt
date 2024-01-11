@@ -305,13 +305,13 @@ fun BarangFormInput(barangForm: String, onValueChange: (String) -> Unit, onRemov
 @Composable
 fun DatePickerCompose(onDateSelected: (String) -> Unit) {
     val datePickerState = rememberDatePickerState(
-        selectableDates = object : SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                val todayCalendar = Calendar.getInstance()
-                val todayMillis = todayCalendar.timeInMillis
-                return utcTimeMillis >= todayMillis
-            }
-        }
+//        selectableDates = object : SelectableDates {
+//            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+//                val todayCalendar = Calendar.getInstance()
+//                val todayMillis = todayCalendar.timeInMillis
+//                return utcTimeMillis >= todayMillis
+//            }
+//        }
     )
 
     val selectedDate = datePickerState.selectedDateMillis
@@ -322,8 +322,8 @@ fun DatePickerCompose(onDateSelected: (String) -> Unit) {
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        DatePicker(state = datePickerState, modifier = Modifier.weight(1f))
-        Spacer(modifier = Modifier.height(24.dp))
+        DatePicker(state = datePickerState)
+        Spacer(modifier = Modifier.height(5.dp))
         // Display selected date
         Text(
             text = "Selected Date: ${selectedDate?.let { convertMillisToDate(it) } ?: "Not selected"}",

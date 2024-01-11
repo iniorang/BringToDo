@@ -152,9 +152,9 @@ fun AuthPage(navController: NavController, modifier: Modifier = Modifier, contex
                     Button(
                         onClick = {
                             if (isLogin) {
-                                AuthController.login(username.text, password.text, navController, preferencesManager) {}
+                                AuthController.login(context,username.text, password.text, navController, preferencesManager) {}
                             } else {
-                                AuthController.register(email.text, username.text, password.text, navController, preferencesManager) {}
+                                AuthController.register(context,email.text, username.text, password.text, navController, preferencesManager) {}
                             }
                         },
                         modifier = Modifier

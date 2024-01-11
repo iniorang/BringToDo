@@ -1,6 +1,7 @@
 package com.example.bringtodo.backend.controller
 
 import android.content.Context
+import android.widget.Toast
 import androidx.work.WorkManager
 import com.example.bringtodo.PreferencesManager
 import com.example.bringtodo.backend.NotifHelper
@@ -25,6 +26,10 @@ class AcaraController {
             val bawaan = barangForms.joinToString(", ")
             val pembuat = prefman.getData("username")
             val AcaraData = AcaraData(AcaraBody(name, pembuat, date, waktu, bawaan))
+            if (name.isEmpty() || date.isEmpty() || waktu.isEmpty()) {
+                Toast.makeText(context, "Harap lengkapi semua data!", Toast.LENGTH_SHORT).show()
+                return
+            }
             acaraService.insert(AcaraData).enqueue(object : Callback<Acara> {
                 override fun onResponse(call: Call<Acara>, response: Response<Acara>): Unit =
                     if (response.isSuccessful) {
@@ -39,6 +44,7 @@ class AcaraController {
 //                            NotifHelper.notifAcara15menit(context, dateTimeMillis, studioname, bawaan)
 //                            NotifHelper.notifAcara1Jam(context, dateTimeMillis, studioname, bawaan)
                             createnotif(context,dateTimeMillis,name,bawaan)
+                            Toast.makeText(context, "Acara $name sukses dibuat", Toast.LENGTH_SHORT).show()
                         }else{
 //                            Todo
                         }
@@ -138,10 +144,14 @@ class AcaraController {
             })
         }
 
-        fun updateAcara(id: String?,old : String, studioname: String,date: String,waktu: String, barangForms: List<String>,prefman: PreferencesManager,context: Context,callback: (Acara?) -> Unit){
+        fun updateAcara(id: String?,old : String, name: String,date: String,waktu: String, barangForms: List<String>,prefman: PreferencesManager,context: Context,callback: (Acara?) -> Unit){
             val bawaan = barangForms.joinToString(", ")
             val pembuat = prefman.getData("username")
-            val AcaraData = AcaraData(AcaraBody(studioname, pembuat, date, waktu, bawaan))
+            val AcaraData = AcaraData(AcaraBody(name, pembuat, date, waktu, bawaan))
+            if (name.isEmpty() || date.isEmpty() || waktu.isEmpty()) {
+                Toast.makeText(context, "Harap lengkapi semua data!", Toast.LENGTH_SHORT).show()
+                return
+            }
             acaraService.update(id,AcaraData).enqueue(object : Callback<Acara>{
                 override fun onResponse(call: Call<Acara>, response: Response<Acara>): Unit =
                     if (response.isSuccessful) {
@@ -156,7 +166,8 @@ class AcaraController {
 //                            NotifHelper.notifAcara1hari(context, dateTimeMillis, studioname,bawaan)
 //                            NotifHelper.notifAcara15menit(context, dateTimeMillis, studioname, bawaan)
 //                            NotifHelper.notifAcara1Jam(context, dateTimeMillis, studioname, bawaan)
-                            createnotif(context, dateTimeMillis, studioname, bawaan)
+                            createnotif(context, dateTimeMillis, name, bawaan)
+                            Toast.makeText(context, "Acara berhasil dibuat", Toast.LENGTH_SHORT).show()
                         }else{
 //                            Todo
                         }

@@ -1,5 +1,7 @@
 package com.example.bringtodo.backend.controller
 
+import android.content.Context
+import android.widget.Toast
 import androidx.navigation.NavController
 import com.example.bringtodo.PreferencesManager
 import com.example.bringtodo.Screen
@@ -14,7 +16,7 @@ import retrofit2.Response
 class AuthController {
     companion object{
         private var authService : AuthService = ApiClient.getService(AuthService::class.java)
-        fun login(username : String, password: String, navController: NavController, prefMan: PreferencesManager, callback: (Auth?) -> Unit) {
+        fun login(context: Context,username : String, password: String, navController: NavController, prefMan: PreferencesManager, callback: (Auth?) -> Unit) {
             authService.login(LoginData(username, password)).enqueue(object : Callback<Auth> {
                 override fun onResponse(call: Call<Auth>, response: Response<Auth>): Unit =
                     if (response.isSuccessful) {
@@ -28,8 +30,9 @@ class AuthController {
                         prefMan.saveData("password", password)
                         navController.navigate(Screen.Acara.route)
                     } else {
+                        Toast.makeText(context, "Username atau password salah!", Toast.LENGTH_SHORT).show()
                         println("Unsuccesful login")
-                        navController.navigate(Screen.Auth.route)
+//                        navController.navigate(Screen.Auth.route)
                         callback(null)
                     }
 
@@ -39,7 +42,12 @@ class AuthController {
                 }
             })
         }
-        fun register(email : String, username : String, password: String, navController: NavController, prefMan: PreferencesManager,  callback: (Auth?) -> Unit) {
+        fun register(context: Context,email : String, username : String, password: String, navController: NavController, prefMan: PreferencesManager,  callback: (Auth?) -> Unit) {
+            if (password.length < 8) {
+                Toast.makeText(context, "Password harus memiliki minimal 8 karakter", Toast.LENGTH_SHORT).show()
+                callback(null)
+                return
+            }
             authService.register(RegisterData(email, username, password)).enqueue(object : Callback<Auth> {
                 override fun onResponse(call: Call<Auth>, response: Response<Auth>): Unit =
                     if (response.isSuccessful) {
@@ -53,8 +61,9 @@ class AuthController {
                         prefMan.saveData("password", password)
                         navController.navigate(Screen.Acara.route)
                     } else {
+                        Toast.makeText(context, "Data Kurang Lengkap", Toast.LENGTH_SHORT).show()
                         println("Unsuccesful register")
-                        navController.navigate(Screen.Auth.route)
+//                        navController.navigate(Screen.Auth.route)
                         callback(null)
                     }
 
