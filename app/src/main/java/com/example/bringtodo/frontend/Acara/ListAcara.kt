@@ -250,10 +250,13 @@ fun LogoutConfirmation(navController: NavController,context: Context, preference
     alertDialogBuilder.setMessage("Apakah Anda yakin ingin untuk keluar?")
 
     alertDialogBuilder.setPositiveButton("Ya") { dialog, _ ->
-        preferencesManager.saveData("jwt","")
+        preferencesManager.saveData("jwt", "")
+//        preferencesManager.saveData("name","")
         dialog.dismiss()
+        navController.popBackStack()
         navController.navigate(Screen.Auth.route)
     }
+
 
     alertDialogBuilder.setNegativeButton("Batal") { dialog, _ ->
         dialog.dismiss()

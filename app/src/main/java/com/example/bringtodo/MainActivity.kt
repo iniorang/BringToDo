@@ -81,13 +81,13 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Greeting(context: Context) {
+fun Greeting(context: Context): String {
     // A surface container using the 'background' color from the theme
     val navController = rememberNavController()
     val sharedPreferences: SharedPreferences = LocalContext.current.getSharedPreferences("auth", Context.MODE_PRIVATE)
     var jwt = sharedPreferences.getString("jwt","")
     Log.d("BringToDo","JWT $jwt")
-    var startDestination : String = if(jwt.equals("")){ Screen.Auth.route }else{ Screen.Acara.route }
+    var startDestination : String = if(jwt.equals("")){Screen.Auth.route}else{ Screen.Acara.route }
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -121,6 +121,7 @@ fun Greeting(context: Context) {
             }
         }
     }
+    return (startDestination)
 }
 
 @Composable
