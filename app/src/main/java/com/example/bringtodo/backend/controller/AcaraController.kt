@@ -44,7 +44,7 @@ class AcaraController {
 //                            NotifHelper.notifAcara15menit(context, dateTimeMillis, studioname, bawaan)
 //                            NotifHelper.notifAcara1Jam(context, dateTimeMillis, studioname, bawaan)
                             createnotif(context,dateTimeMillis,name,bawaan)
-                            Toast.makeText(context, "Acara $name sukses dibuat", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Acara $name sukses dibuat", Toast.LENGTH_LONG).show()
                         }else{
 //                            Todo
                         }
@@ -149,7 +149,7 @@ class AcaraController {
             val pembuat = prefman.getData("username")
             val AcaraData = AcaraData(AcaraBody(name, pembuat, date, waktu, bawaan))
             if (name.isEmpty() || date.isEmpty() || waktu.isEmpty()) {
-                Toast.makeText(context, "Harap lengkapi semua data!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Harap lengkapi semua data!", Toast.LENGTH_LONG).show()
                 return
             }
             acaraService.update(id,AcaraData).enqueue(object : Callback<Acara>{

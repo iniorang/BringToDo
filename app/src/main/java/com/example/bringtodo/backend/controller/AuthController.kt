@@ -30,7 +30,7 @@ class AuthController {
                         prefMan.saveData("password", password)
                         navController.navigate(Screen.Acara.route)
                     } else {
-                        Toast.makeText(context, "Username atau password salah!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Username atau password salah!", Toast.LENGTH_LONG).show()
                         println("Unsuccesful login")
 //                        navController.navigate(Screen.Auth.route)
                         callback(null)
@@ -43,8 +43,8 @@ class AuthController {
             })
         }
         fun register(context: Context,email : String, username : String, password: String, navController: NavController, prefMan: PreferencesManager,  callback: (Auth?) -> Unit) {
-            if (password.length < 8) {
-                Toast.makeText(context, "Password harus memiliki minimal 8 karakter", Toast.LENGTH_SHORT).show()
+            if (password.length < 6) {
+                Toast.makeText(context, "Password harus memiliki minimal 8 karakter", Toast.LENGTH_LONG).show()
                 callback(null)
                 return
             }
@@ -61,7 +61,7 @@ class AuthController {
                         prefMan.saveData("password", password)
                         navController.navigate(Screen.Acara.route)
                     } else {
-                        Toast.makeText(context, "Data Kurang Lengkap", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Data Kurang Lengkap", Toast.LENGTH_LONG).show()
                         println("Unsuccesful register")
 //                        navController.navigate(Screen.Auth.route)
                         callback(null)
